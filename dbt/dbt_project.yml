@@ -1,0 +1,16 @@
+name: campus_pulse
+version: "1.0"
+config-version: 2
+profile: campus_pulse
+model-paths: [models]
+seed-paths: [seeds]
+test-paths: [tests]
+macro-paths: [macros]
+models:
+  campus_pulse:
+    staging: {+materialized: view, +schema: staging}
+    intermediate: {+materialized: view, +schema: intermediate}
+    marts: {+materialized: table, +schema: marts}
+seeds:
+  campus_pulse:
+    +schema: seeds

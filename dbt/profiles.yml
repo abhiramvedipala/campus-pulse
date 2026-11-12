@@ -1,0 +1,8 @@
+campus_pulse:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('CAMPUSPULSE_DB', '../data/warehouse.duckdb') }}"
+      threads: 4
+      settings: {memory_limit: 4GB}

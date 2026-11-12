@@ -1,0 +1,14 @@
+{
+  "seconds": 2.6,
+  "rows": {
+    "scorecard": 44408,
+    "suppression": 312,
+    "load_log": 36,
+    "ipeds_hd": 43525,
+    "ipeds_sfa": 39759,
+    "ipeds_drvgr": 5412,
+    "ipeds_drvef": 5979,
+    "ipeds_drvc": 6049
+  },
+  "warehouse_mb": 23.9
+}
