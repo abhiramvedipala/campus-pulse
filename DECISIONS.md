@@ -100,3 +100,10 @@ same branch and merge-commit flow (`git merge --no-ff`) and listed the push unde
 - **OLS inference** uses HC3 robust SEs (Breusch-Pagan rejects homoskedasticity). Cluster-by-institution SEs are stored beside them and are about 2x larger for the core terms, so I treat HC3 intervals as optimistic.
 - **Release year is the top SHAP driver.** That is a dollar-base artifact (nominal dollars re-based per release), not an institutional characteristic. It is kept as a fixed effect and flagged in every explanation.
 - **Florida over/under-performers** exclude "University of Florida-Online" (same earnings record as the main campus). Residual = mean out-of-fold log residual across an institution's releases, shown as a percent. A typical residual is about 23%, so small differences are noise.
+
+## D-12 Dashboard, brief and refresh (phase 4)
+- The app reads only committed files (`reports/*.csv`, `reports/institution_year_slim.csv.gz`, `docs/charts/*.png`) so it runs from a fresh clone and on Streamlit Cloud without the warehouse. `CAMPUSPULSE_FIXTURE=1` points it at the fixture outputs.
+- Screenshots use a fixed 1440x1800 viewport and a 3 s wait for Plotly. The browser is Playwright's bundled Chromium, falling back to the installed Chrome.
+- `docs/findings.md` is generated; the PDF is rendered from the same text with Chromium and the font steps down (9.5 to 7.5 pt) until it fits one Letter page, which the script asserts.
+- `make refresh` records wall time before the final findings/RESULTS assembly (about 5 s, excluded and stated in the JSON). First full run 128 s, final run 163 s (the machine was shared); both on 6 releases, 44,408 rows.
+- A fixture refresh writes to `reports_fixture/`, `docs/charts_fixture/`, `docs/screenshots_fixture/` and `docs/findings_fixture/` (all gitignored) so it cannot overwrite committed real outputs.

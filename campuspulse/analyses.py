@@ -33,6 +33,10 @@ def fmt_p(p: float) -> str:
     return "p < 1e-300" if p < 1e-300 else f"p = {p:.1e}"
 
 
+def usd(x: float) -> str:
+    return f"-${-x:,.0f}" if x < 0 else f"${x:,.0f}"
+
+
 def verdict(lo: float, hi: float) -> str:
     return (
         "the interval includes zero, so this is not distinguishable from no difference" if lo <= 0 <= hi else "the interval excludes zero"
@@ -283,7 +287,7 @@ def q3(con, rep, ch, reps, notes):
         e, c = e.iloc[0], c.iloc[0]
         notes.append(
             f"**Q3 Florida, {last} release.** Florida public 4-year institutions (n={int(e.n_fl)}) have median earnings ${e.fl_median:,.0f} vs ${e.peer_median:,.0f} for public 4-year peers elsewhere (n={int(e.n_peers)}): "
-            f"gap ${e.gap:,.0f} (95% bootstrap CI ${e.ci_lo:,.0f} to ${e.ci_hi:,.0f}); completion gap {c.gap * 100:.1f} points ({c.ci_lo * 100:.1f} to {c.ci_hi * 100:.1f}). "
+            f"gap {usd(e.gap)} (95% bootstrap CI {usd(e.ci_lo)} to {usd(e.ci_hi)}); completion gap {c.gap * 100:.1f} points ({c.ci_lo * 100:.1f} to {c.ci_hi * 100:.1f}). "
             f"For earnings {verdict(e.ci_lo, e.ci_hi)}. Florida groups are small (flagged small_fl_n in q3_florida_gaps.csv), so intervals are wide; University of Florida-Online reports the same earnings figure as the main campus. Community colleges are compared separately."
         )
     return gaps

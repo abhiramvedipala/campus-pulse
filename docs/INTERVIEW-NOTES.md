@@ -87,3 +87,29 @@ Fixing it meant treating ordinal-coded categoricals as numeric in the boosted mo
 5. *Did you check leakage?* Yes: excluded earnings-derived fields, a test fails if one is added, and a permuted target scores near 0 R-squared out of fold.
 
 **Files to open**: `campuspulse/model.py`, `tests/test_leakage.py`, `reports/model_metrics.csv`, `reports/shap_vs_lasso.csv`, `docs/charts/shap_summary.png`, `DECISIONS.md` D-11.
+
+## Phase 4: dashboard, brief and one-command refresh
+
+**What it built**
+- A four-page Streamlit app (overview, price vs earnings, Florida, model) with sector/state/year filters that reads only committed outputs.
+- Fixed-viewport Playwright screenshots, one per page.
+- A one-page plain-English brief (Markdown + PDF) whose numbers are inserted from `reports/`, with a check that the PDF is exactly one page.
+- `make refresh` / `scripts/refresh.sh`: raw data to every artifact in one command (163 s), failing on any dbt test failure; `FIXTURE=1` does the same offline.
+
+**Key decisions (and "why not X?")**
+- *Why does the app read CSVs, not the warehouse?* A fresh clone and Streamlit Cloud have no warehouse; committed outputs make the app deployable and keep one source of truth for numbers.
+- *Why generate the brief instead of writing it?* Prose that hard-codes numbers goes stale; generating it makes every figure traceable to a script.
+- *Why Streamlit, not Power BI?* Power BI Desktop is Windows-only; Tableau Public needs an account.
+- *Why `set -e` and not a workflow tool?* Five linear steps; a shell script is easier to read than an orchestrator.
+
+**Hardest problem**
+The first overview screenshot showed a "Page not found" dialog: the default Streamlit page lives at `/`, not `/overview`. I also had to give screenshots a tall fixed viewport because Streamlit scrolls inside a container, so a default full-page capture was cut off.
+
+**Likely questions**
+1. *How do you make the analysis reproducible?* Seeded bootstraps, checksummed downloads, idempotent loads, one command; numeric outputs matched across two full runs.
+2. *How would you deploy it?* Streamlit Cloud with `app/requirements.txt`; the app needs no secrets or warehouse.
+3. *What would you do with more time?* CPI-deflated sensitivity, program-mix controls, an unseen-institution temporal test.
+4. *How do you stop the brief from overstating?* A fixed "what this cannot tell you" paragraph, intervals beside every claim, and wording chosen from the interval (for example "not clearly different from zero").
+5. *Why only 163 seconds?* DuckDB reads Parquet/pandas directly, the data is 44k rows, and the models are small.
+
+**Files to open**: `app/streamlit_app.py`, `scripts/refresh.sh`, `scripts/build_findings.py`, `scripts/screenshots.py`, `docs/findings.md`.

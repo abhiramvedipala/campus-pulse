@@ -27,6 +27,14 @@ def run(fixture: bool = False) -> dict:
                round(1 - n_nonnull::double / n_rows, 4) as missing_share
         from raw.suppression order by column_name, release
     """).df().to_csv(out / "suppression_by_column.csv", index=False)
+    # Slim exports so the dashboard runs from committed files alone (no warehouse needed).
+    con.sql("select * from marts.mart_sector_year order by sector, release_year").df().to_csv(out / "sector_year.csv", index=False)
+    con.sql("""
+        select unitid, release_year, institution_name, state, sector, institution_level, carnegie_group,
+               net_price, median_earnings_p10 as earnings, pct_pell, admission_rate, enrollment, completion_rate,
+               median_grad_debt, debt_to_earnings
+        from marts.fct_institution_year where sector is not null order by unitid, release_year
+    """).df().round(4).to_csv(out / "institution_year_slim.csv.gz", index=False)
     one = lambda q: con.execute(q).fetchone()[0]  # noqa: E731
     stats = {
         "releases_loaded": one("select count(distinct release_year) from marts.fct_institution_year"),
