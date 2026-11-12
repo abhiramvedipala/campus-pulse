@@ -227,7 +227,21 @@ def phase3(rep) -> list[str]:
     return out
 
 
-SECTIONS = [phase1, phase2, phase3]
+def refresh(rep) -> list[str]:
+    t = _load(rep, "refresh_timing.json")
+    if t is None:
+        return []
+    return [
+        "## Refresh",
+        "",
+        "| Measure | Value | Command |",
+        "|---|---|---|",
+        f"| Wall time of a full refresh from raw data ({t['mode']}) | {t['wall_seconds']} s | `make refresh` |",
+        "",
+    ]
+
+
+SECTIONS = [phase1, phase2, phase3, refresh]
 
 
 def run(fixture: bool = False) -> None:
