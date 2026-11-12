@@ -1,0 +1,51 @@
+unitid,institution_name,state,sector,n_releases,mean_resid_pct,actual_last,pred_last,outside_one_sd,direction
+239169,Medical College of Wisconsin,WI,private nonprofit,4,257.27,250000.0,72282.37,True,over-performer
+103778,Thunderbird School of Global Management,AZ,private nonprofit,3,236.5,118000.0,37703.59,True,over-performer
+207315,Oklahoma State University Center for Health Sciences,OK,public,2,226.35,241900.0,72525.74,True,over-performer
+10377801,Global MBA Latin American Managers Program Satellite Campus,FL,private nonprofit,2,222.78,111600.0,35697.14,True,over-performer
+237880,West Virginia School of Osteopathic Medicine,WV,public,4,196.12,224300.0,76602.51,True,over-performer
+179265,University of Health Sciences and Pharmacy in St. Louis,MO,private nonprofit,6,169.47,130161.0,54490.74,True,over-performer
+193830,New York Medical College,NY,private nonprofit,3,169.47,219500.0,80443.39,True,over-performer
+141015,The Creative Circus,GA,private for-profit,5,162.46,91021.0,33453.6,True,over-performer
+188580,Albany Medical College,NY,private nonprofit,4,157.99,147500.0,80443.39,True,over-performer
+187222,University of Medicine and Dentistry of New Jersey,NJ,public,2,157.9,107100.0,45487.19,True,over-performer
+177834,A T Still University of Health Sciences,MO,private nonprofit,4,156.17,193400.0,82372.74,True,over-performer
+188526,Albany College of Pharmacy and Health Sciences,NY,private nonprofit,6,148.57,128214.0,61831.64,True,over-performer
+189811,St Paul's School of Nursing-Queens,NY,private for-profit,6,143.31,91518.0,49346.47,True,over-performer
+461865,Best Care College,NJ,private for-profit,2,139.1,77263.0,33575.01,True,over-performer
+128726,Bridgeport Hospital School of Nursing,CT,private nonprofit,4,133.87,74900.0,33503.27,True,over-performer
+44784701,Aviator College of Aeronautical Science & Technology -  Kissimmee,FL,private for-profit,2,129.81,116728.0,42401.31,True,over-performer
+479424,Unitek College,CA,private for-profit,2,128.74,78478.0,38752.74,True,over-performer
+166656,Massachusetts College of Pharmacy and Health Sciences,MA,private nonprofit,6,125.86,103156.0,60865.97,True,over-performer
+154156,Des Moines University-Osteopathic Medical Center,IA,private nonprofit,2,123.73,152000.0,79540.78,True,over-performer
+382063,University of Phoenix-Puerto Rico,PR,private for-profit,4,123.43,47100.0,18858.4,True,over-performer
+440819,Miami Ad School-San Francisco,CA,private for-profit,6,121.01,89994.0,49486.28,True,over-performer
+476799,Unitek College,CA,private for-profit,2,119.55,78478.0,41285.11,True,over-performer
+15208001,University of Notre Dame -,IL,private nonprofit,2,119.37,113124.0,50825.83,True,over-performer
+187000,Aviation Institute of Maintenance-Teterboro,NJ,private for-profit,6,119.29,77996.0,39826.8,True,over-performer
+449384,Gnomon,CA,private for-profit,2,117.35,124464.0,46572.11,True,over-performer
+123633,South Baylo University,CA,private nonprofit,4,-66.95,31700.0,78857.49,True,under-performer
+45098801,Coastline Beauty College - Hemet,CA,private for-profit,2,-64.94,16432.0,43547.35,True,under-performer
+404222,Inter American University of Puerto Rico-School of Optometry,PR,private nonprofit,4,-63.67,19800.0,54787.71,True,under-performer
+242723,Inter American University of Puerto Rico-School of Law,PR,private nonprofit,4,-62.29,19800.0,51580.78,True,under-performer
+11339705,Marinello School of Beauty-Layton,UT,private for-profit,3,-57.3,14700.0,31176.88,True,under-performer
+11339706,Marinello School of Beauty-Ogden,UT,private for-profit,3,-57.3,14700.0,31176.88,True,under-performer
+45491701,Celebrity School of Beauty - Hialeah,FL,private for-profit,2,-55.48,19725.0,42401.31,True,under-performer
+217350,Newport School of Hairdressing-Main Campus,RI,private for-profit,3,-55.45,13600.0,31960.57,True,under-performer
+440916,Southern University Law Center,LA,public,6,-55.37,47186.0,73864.22,True,under-performer
+195623,Spanish-American Institute,NY,private nonprofit,3,-55.26,19600.0,43745.56,True,under-performer
+43601201,Franklin Career Institute,NY,private nonprofit,4,-55.12,17800.0,43817.84,True,under-performer
+16410001,International Beauty School,VA,private for-profit,4,-54.25,14700.0,35436.27,True,under-performer
+188942,Associated Beth Rivkah Schools,NY,private nonprofit,5,-53.85,21930.0,43480.73,True,under-performer
+123448,Trinity Law School,CA,private nonprofit,6,-52.88,51278.0,93584.72,True,under-performer
+188696,Joffrey Ballet School,NY,private for-profit,2,-52.25,32060.0,51998.38,True,under-performer
+228866,Texas Chiropractic College Foundation Inc,TX,private nonprofit,3,-50.18,46100.0,95693.56,True,under-performer
+212975,Commonwealth Technical Institute,PA,private nonprofit,6,-49.72,30464.0,43949.44,True,under-performer
+193751,Northeast College of Health Sciences,NY,private nonprofit,2,-48.91,50500.0,96393.81,True,under-performer
+192110,The Juilliard School,NY,private nonprofit,6,-48.88,43638.0,81721.63,True,under-performer
+450988,Coastline Beauty College,CA,private for-profit,2,-48.7,16432.0,31020.04,True,under-performer
+400187,Advance Beauty College,CA,private for-profit,5,-48.46,17233.0,34033.51,True,under-performer
+40620002,Wright Career College - Tulsa OK,OK,private nonprofit,4,-47.7,18200.0,34689.63,True,under-performer
+13541601,Manhattan Hairstyling Academy - North,FL,private for-profit,4,-47.58,17700.0,32040.85,True,under-performer
+23797801,West Virginia Business College-Nutter Fort,WV,private for-profit,4,-47.51,17200.0,32182.04,True,under-performer
+37564702,CC's Cosmetology College,OK,private for-profit,4,-47.24,14900.0,27891.6,True,under-performer
