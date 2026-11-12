@@ -79,7 +79,7 @@ def phase2(rep) -> list[str]:
         return []
     cmd = "`python -m campuspulse.analyses`"
     f = lambda d, cols, nd=3: d[cols].round(nd).to_markdown(index=False)  # noqa: E731
-    ok = q1[q1.skipped.fillna("") == ""]
+    ok = q1[q1.skipped.isna() | (q1.skipped.astype(str) == "")]
     out = [
         "## Phase 2: SQL analyses and tests",
         "",
