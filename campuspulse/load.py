@@ -15,7 +15,7 @@ import pandas as pd
 
 from . import config as C
 
-SENTINELS = ("NULL", "PrivacySuppressed", "NA")  # "NA" is how releases before 2020 write missing
+SENTINELS = ("NULL", "PrivacySuppressed", "PS", "NA")  # PS/NA are how these releases write suppressed / not available
 IPEDS_COLS = {
     "hd": C.IPEDS_HD_COLS,
     "sfa": C.IPEDS_SFA_COLS,
@@ -71,7 +71,7 @@ def clean_scorecard(df: pd.DataFrame, release: str) -> tuple[pd.DataFrame, pd.Da
                 "release": release,
                 "column_name": col,
                 "n_rows": len(s),
-                "n_suppressed": int((s == "PrivacySuppressed").sum()),
+                "n_suppressed": int(s.isin(["PrivacySuppressed", "PS"]).sum()),
                 "n_null_literal": int(s.isin(["NULL", "NA", ""]).sum()),
                 "n_nonnull": int((~s.isin(SENTINELS) & (s != "")).sum()),
             }

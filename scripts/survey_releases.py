@@ -1,5 +1,6 @@
 """One-off survey: per release, row count and non-null counts of key fields."""
 
+import pathlib
 import re
 import sys
 import zipfile
@@ -28,12 +29,17 @@ KEY = [
 ]
 with zipfile.ZipFile(Z) as z:
     names = sorted(n for n in z.namelist() if re.match(r"MERGED\d{4}_\d\d_PP\.csv$", n))
-    for n in names[-14:]:
+    rows = []
+    for n in names[-20:]:
         with z.open(n) as f:
             hdr = pd.read_csv(f, nrows=0).columns
         cols = [c for c in KEY if c in hdr]
         with z.open(n) as f:
-            df = pd.read_csv(f, usecols=cols, dtype=str, na_values=["NULL", "PrivacySuppressed"])
+            df = pd.read_csv(f, usecols=cols, dtype=str, na_values=["NULL", "PrivacySuppressed", "PS", "NA"])
         miss = [c for c in KEY if c not in hdr]
         print(n, len(df), "ncols", len(hdr), "missing", miss)
-        print("   ", {c: int(df[c].notna().sum()) for c in cols if c not in ("UNITID", "INSTNM")})
+        counts = {c: int(df[c].notna().sum()) for c in cols if c != "UNITID"}
+        print("   ", counts)
+        rows.append({"release": n[6:13], "rows": len(df), **{f"nonnull_{k}": v for k, v in counts.items()}})
+    out = pathlib.Path(__file__).resolve().parent.parent / "reports" / "release_survey.csv"
+    pd.DataFrame(rows).to_csv(out, index=False)
