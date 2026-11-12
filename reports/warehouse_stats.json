@@ -1,0 +1,28 @@
+{
+  "releases_loaded": 6,
+  "distinct_institutions": 9536,
+  "rows_fct_institution_year": 44408,
+  "rows_with_earnings": 35270,
+  "ipeds_match_rate": 0.9418,
+  "net_price_nulled_out_of_range": 53,
+  "ipeds_files_missing": [
+    "DRVGR2011",
+    "DRVEF2011",
+    "DRVC2011",
+    "DRVGR2012",
+    "DRVEF2012",
+    "DRVC2012",
+    "DRVGR2013",
+    "DRVEF2013",
+    "DRVC2013",
+    "DRVGR2014",
+    "DRVEF2014",
+    "DRVC2014",
+    "DRVGR2020",
+    "DRVEF2020",
+    "DRVC2020"
+  ],
+  "dbt_tests": 18,
+  "dbt_tests_passed": 18,
+  "dbt_models_built": 10
+}

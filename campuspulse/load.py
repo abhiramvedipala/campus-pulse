@@ -5,6 +5,7 @@ Idempotent: every table is dropped and rebuilt from the same inputs, parquet wri
 """
 
 import argparse
+import json
 import os
 import time
 import zipfile
@@ -129,6 +130,9 @@ def run(fixture: bool = False) -> dict:
     n = {t: con.execute(f"select count(*) from raw.{t}").fetchone()[0] for t in frames}
     con.close()
     secs = round(time.time() - t0, 1)
+    (C.reports_dir(fixture) / "load_timing.json").write_text(
+        json.dumps({"seconds": secs, "rows": n, "warehouse_mb": round(path.stat().st_size / 1e6, 1)}, indent=2)
+    )
     print(f"loaded into {path.name} in {secs}s: {n}")
     return {"seconds": secs, "rows": n}
 

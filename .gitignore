@@ -18,3 +18,5 @@ logs/
 # local build prompts, not part of the repo
 PROMPT.md
 CLAUDE.md
+reports_fixture/
+docs/charts_fixture/

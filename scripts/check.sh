@@ -17,7 +17,7 @@ fi
 (cd dbt && "$PY" -m dbt.cli.main build --profiles-dir .)
 
 # Later phases append their steps here (analyses, models, charts).
-for mod in analyses model; do
+for mod in warehouse_stats analyses model; do
   if [ -f "campuspulse/$mod.py" ]; then "$PY" -m "campuspulse.$mod" $FIX; fi
 done
 echo "check.sh OK ${FIX:-(real data)}"

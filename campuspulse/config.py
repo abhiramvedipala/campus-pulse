@@ -9,6 +9,20 @@ FIXTURES = ROOT / "data" / "fixtures"
 WAREHOUSE = ROOT / "data" / "warehouse.duckdb"
 FIXTURE_WAREHOUSE = ROOT / "data" / "warehouse_fixture.duckdb"
 
+
+def reports_dir(fixture: bool = False) -> Path:
+    """Committed outputs live in reports/; fixture runs write to an ignored sibling so they never clobber real numbers."""
+    d = ROOT / ("reports_fixture" if fixture else "reports")
+    d.mkdir(exist_ok=True)
+    return d
+
+
+def charts_dir(fixture: bool = False) -> Path:
+    d = ROOT / "docs" / ("charts_fixture" if fixture else "charts")
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
 SCORECARD_PAGE = "https://collegescorecard.ed.gov/data/"
 DICT_URL = "https://collegescorecard.ed.gov/assets/CollegeScorecardDataDictionary.xlsx"
 IPEDS_BASE = "https://nces.ed.gov/ipeds/datacenter/data/"
