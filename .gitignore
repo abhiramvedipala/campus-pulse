@@ -1,0 +1,21 @@
+.claude/
+.env
+data/raw/
+data/staging/
+data/warehouse.duckdb
+data/warehouse.duckdb.wal
+models/
+*.joblib
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+logs/
+.DS_Store
+# local build prompts, not part of the repo
+PROMPT.md
+CLAUDE.md
