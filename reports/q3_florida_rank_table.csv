@@ -1,0 +1,39 @@
+fl_group,institution_name,release_year,earnings,earnings_rank_in_group,earnings_percentile_vs_public_peers,completion_rate,net_price,debt_to_earnings,enrollment
+Florida public 4-year,University of Florida,2022,78456.0,1.0,89.00169204737732,0.9001,6275.0,0.17525746915468543,33673.0
+Florida public 4-year,University of Florida-Online,2022,78456.0,1.0,89.00169204737732,0.7871,6072.0,0.17525746915468543,4650.0
+Florida public 4-year,Florida State University,2022,68225.0,3.0,74.2808798646362,0.8479,6450.0,0.21986075485525833,32691.0
+Florida public 4-year,Florida International University,2022,65722.0,4.0,67.51269035532995,0.6918,8722.0,0.22443017558808315,39277.0
+Florida public 4-year,University of South Florida,2022,63660.0,5.0,63.62098138747885,0.7412,9203.0,0.235626767200754,36763.0
+Florida public 4-year,University of Central Florida,2022,63483.0,6.0,62.77495769881557,0.7558,9949.0,0.2638501646109982,58354.0
+Florida public 4-year,Florida Atlantic University,2022,61062.0,7.0,55.32994923857868,0.6214,8636.0,0.26615571058923715,23074.0
+Florida public 4-year,University of North Florida,2022,59626.0,8.0,51.438240270727576,0.6767,8852.0,0.23677590312950728,13866.0
+Florida public 4-year,Florida Gulf Coast University,2022,59401.0,9.0,49.746192893401016,0.5853,10161.0,0.2651470513964411,13788.0
+Florida public 4-year,New College of Florida,2022,53164.0,10.0,31.64128595600677,0.6261,7091.0,0.2544202844029795,669.0
+Florida public 4-year,University of West Florida,2022,52902.0,11.0,30.456852791878177,0.5306,8300.0,0.2835431552682318,8806.0
+Florida public 4-year,Florida Agricultural and Mechanical University,2022,52104.0,12.0,27.072758037225043,0.6041,11558.0,0.36945340089052664,7436.0
+Florida public 4-year,Florida Polytechnic University,2022,,,,0.4728,8900.0,,1517.0
+Florida public community college,Florida SouthWestern State College,2022,48404.0,1.0,,0.4095,8149.0,0.16527559705809436,10623.0
+Florida public community college,Palm Beach State College,2022,46814.0,2.0,,0.4168,10549.0,0.15664117571666594,20378.0
+Florida public community college,Santa Fe College,2022,46650.0,3.0,,0.5065,10635.0,0.2122829581993569,11038.0
+Florida public community college,The College of the Florida Keys,2022,46593.0,4.0,,0.3657,15407.0,0.229154594037731,897.0
+Florida public community college,St Petersburg College,2022,46150.0,5.0,,0.3826,1665.0,0.3466955579631636,18984.0
+Florida public community college,State College of Florida-Manatee-Sarasota,2022,45866.0,6.0,,0.3718,12589.0,0.2289277460428204,7251.0
+Florida public community college,Hillsborough College,2022,45697.0,7.0,,0.332,4264.0,0.21587850405934744,19474.0
+Florida public community college,Miami Dade College,2022,45444.0,8.0,,0.4456,5197.0,0.18319250066015316,40538.0
+Florida public community college,Florida State College at Jacksonville,2022,45388.0,9.0,,0.3741,2948.0,0.28091125407596723,16775.0
+Florida public community college,Valencia College,2022,45388.0,9.0,,0.4486,11025.0,0.20930642460562263,35867.0
+Florida public community college,Saint Johns River State College,2022,45331.0,11.0,,0.4286,5859.0,0.23162956916900135,3708.0
+Florida public community college,Polk State College,2022,44710.0,12.0,,0.3289,9107.0,0.24602997092373072,6114.0
+Florida public community college,Lake-Sumter State College,2022,44593.0,13.0,,0.4686,4990.0,0.1676720561523109,3188.0
+Florida public community college,Pasco-Hernando State College,2022,44395.0,14.0,,0.3625,3560.0,0.213988061718662,6630.0
+Florida public community college,Florida Gateway College,2022,43859.0,15.0,,0.6364,2016.0,0.16523404546387285,2047.0
+Florida public community college,Northwest Florida State College,2022,43741.0,16.0,,0.3793,6531.0,0.20575661278891658,3149.0
+Florida public community college,Indian River State College,2022,43542.0,17.0,,0.4609,4877.0,0.18373065086583068,11481.0
+Florida public community college,Gulf Coast State College,2022,43513.0,18.0,,0.3823,3147.0,0.15411486222508217,3466.0
+Florida public community college,Tallahassee State College,2022,43089.0,19.0,,0.3673,3580.0,0.17210889090022977,9939.0
+Florida public community college,Chipola College,2022,42998.0,20.0,,0.5169,1759.0,,1246.0
+Florida public community college,Eastern Florida State College,2022,42223.0,21.0,,0.5117,6014.0,0.27511072164460126,9714.0
+Florida public community college,Daytona State College,2022,41756.0,22.0,,0.4935,6331.0,0.1915892326851231,8884.0
+Florida public community college,South Florida State College,2022,41548.0,23.0,,0.5644,2598.0,0.15642148839896025,2098.0
+Florida public community college,Pensacola State College,2022,41050.0,24.0,,0.3704,2383.0,0.1556151035322777,6249.0
+Florida public community college,North Florida College,2022,40788.0,25.0,,0.6051,3179.0,,756.0

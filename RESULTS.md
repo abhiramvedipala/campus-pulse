@@ -56,3 +56,74 @@ Share of rows missing for any reason (suppressed, not available or not reported)
 | PCTPELL         | 9.0%      | 9.9%      | 9.7%      | 9.8%      | 13.0%     | 12.5%     |
 | UGDS            | 8.2%      | 9.2%      | 9.2%      | 9.4%      | 12.6%     | 11.8%     |
 
+## Phase 2: SQL analyses and tests
+
+Command for every table below: `python -m campuspulse.analyses`. Bootstrap = institution-clustered, seeded; reps in `reports/analysis_meta.json`.
+
+### Q1 net price vs earnings (n = institutions; partial = after Pell, admission rate, state, year)
+
+| cut      | group              |   n_institutions |   spearman_raw |   raw_ci_lo |   raw_ci_hi |   spearman_residualised |   res_ci_lo |   res_ci_hi |   pct_earnings_per_10k |   pct_ci_lo |   pct_ci_hi |
+|:---------|:-------------------|-----------------:|---------------:|------------:|------------:|------------------------:|------------:|------------:|-----------------------:|------------:|------------:|
+| all      | all institutions   |             6927 |           0.3  |        0.28 |        0.32 |                    0.17 |        0.15 |        0.19 |                   8.68 |        7.73 |        9.64 |
+| sector   | public             |             1980 |           0.51 |        0.48 |        0.53 |                    0.27 |        0.23 |        0.3  |                  15.34 |       13.09 |       17.62 |
+| sector   | private nonprofit  |             1518 |           0.51 |        0.48 |        0.55 |                    0.14 |        0.08 |        0.19 |                   4.23 |        1.73 |        6.79 |
+| sector   | private for-profit |             3494 |           0.54 |        0.51 |        0.56 |                    0.47 |        0.44 |        0.49 |                  24.05 |       21.91 |       26.23 |
+| carnegie | Associate's        |             1330 |           0.1  |        0.07 |        0.14 |                    0.12 |        0.08 |        0.17 |                   4.97 |        2.85 |        7.12 |
+| carnegie | Baccalaureate      |              598 |           0.47 |        0.41 |        0.52 |                    0.15 |        0.08 |        0.22 |                   4.41 |        1.92 |        6.96 |
+| carnegie | Doctoral           |              451 |           0.42 |        0.37 |        0.49 |                    0.04 |       -0.06 |        0.12 |                  -0.31 |       -2.24 |        1.66 |
+| carnegie | Master's           |              637 |           0.35 |        0.29 |        0.4  |                    0.16 |        0.07 |        0.24 |                   2.26 |       -0.07 |        4.64 |
+| carnegie | Special focus      |              306 |           0.37 |        0.27 |        0.47 |                    0.08 |       -0.01 |        0.21 |                   4.44 |        0.52 |        8.52 |
+| carnegie | Tribal             |               33 |           0.05 |       -0.21 |        0.31 |                    0.06 |       -0.18 |        0.31 |                   3.67 |       -8.98 |       18.08 |
+| carnegie | Unclassified       |             3572 |           0.37 |        0.35 |        0.4  |                    0.32 |        0.29 |        0.34 |                  15.21 |       13.44 |       17.02 |
+
+### Q2 completion and debt, 2022 release (completion: unweighted median and enrollment-weighted)
+
+| sector             |   n_institutions |   n_completion |   completion_unweighted_median |   completion_enrollment_weighted |   n_debt |   median_debt |   n_debt_to_earnings |   median_debt_to_earnings |   share_debt_to_earnings_above_half |
+|:-------------------|-----------------:|---------------:|-------------------------------:|---------------------------------:|---------:|--------------:|---------------------:|--------------------------:|------------------------------------:|
+| private for-profit |             2444 |           2058 |                          0.636 |                            0.484 |     1980 |          9500 |                 1772 |                     0.28  |                               0.11  |
+| private nonprofit  |             1972 |           1433 |                          0.58  |                            0.64  |     1399 |         22500 |                 1372 |                     0.386 |                               0.152 |
+| public             |             2068 |           1868 |                          0.402 |                            0.486 |     1593 |         12000 |                 1582 |                     0.242 |                               0.025 |
+
+### Q3 Florida public vs non-Florida public peers, 2022 release (gap = Florida median minus peer median)
+
+| fl_group                         | metric           |   n_fl |   n_peers |   fl_median |   peer_median |       gap |     ci_lo |     ci_hi |
+|:---------------------------------|:-----------------|-------:|----------:|------------:|--------------:|----------:|----------:|----------:|
+| Florida public 4-year            | earnings         |     12 |       579 |   62272.5   |     59268     |  3004.5   | -3779.47  |  8600.88  |
+| Florida public 4-year            | completion_rate  |     13 |       562 |       0.677 |         0.518 |     0.159 |     0.076 |     0.241 |
+| Florida public 4-year            | net_price        |     13 |       560 |    8722     |     14573.5   | -5851.5   | -7783.77  | -5114.51  |
+| Florida public 4-year            | debt_to_earnings |     12 |       573 |       0.246 |         0.327 |    -0.082 |    -0.107 |    -0.058 |
+| Florida public community college | earnings         |     25 |       675 |   44593     |     44617     |   -24     | -1312.15  |  1064.78  |
+| Florida public community college | completion_rate  |     25 |       689 |       0.417 |         0.292 |     0.125 |     0.08  |     0.176 |
+| Florida public community college | net_price        |     25 |       688 |    4990     |      7332.5   | -2342.5   | -3921.3   |  -775.713 |
+| Florida public community college | debt_to_earnings |     23 |       556 |       0.206 |         0.222 |    -0.016 |    -0.054 |     0.006 |
+
+### Q4 Kruskal-Wallis across sectors (latest release per institution)
+
+| metric           |    n |        H |   p_value |   epsilon_squared |   eps_ci_lo |   eps_ci_hi |
+|:-----------------|-----:|---------:|----------:|------------------:|------------:|------------:|
+| completion       | 7741 |  510.068 |         0 |             0.066 |       0.056 |       0.078 |
+| debt_to_earnings | 7201 | 1110.3   |         0 |             0.154 |       0.141 |       0.168 |
+| earnings         | 7998 | 2747.87  |         0 |             0.344 |       0.325 |       0.361 |
+| median_debt      | 7894 | 1196.08  |         0 |             0.152 |       0.139 |       0.165 |
+| net_price        | 7938 | 2209.76  |         0 |             0.278 |       0.263 |       0.294 |
+
+Pairwise Mann-Whitney with Holm correction and rank-biserial effect size:
+
+| metric           | group_a           | group_b            |   n_a |   n_b |   p_holm |   rank_biserial |   rb_ci_lo |   rb_ci_hi |
+|:-----------------|:------------------|:-------------------|------:|------:|---------:|----------------:|-----------:|-----------:|
+| completion       | public            | private nonprofit  |  2054 |  1711 |    0     |          -0.283 |     -0.324 |     -0.247 |
+| completion       | public            | private for-profit |  2054 |  3976 |    0     |          -0.35  |     -0.38  |     -0.319 |
+| completion       | private nonprofit | private for-profit |  1711 |  3976 |    0     |          -0.071 |     -0.103 |     -0.036 |
+| debt_to_earnings | public            | private nonprofit  |  1858 |  1669 |    0     |          -0.528 |     -0.556 |     -0.497 |
+| debt_to_earnings | public            | private for-profit |  1858 |  3674 |    0     |          -0.512 |     -0.537 |     -0.489 |
+| debt_to_earnings | private nonprofit | private for-profit |  1669 |  3674 |    0.002 |          -0.053 |     -0.082 |     -0.02  |
+| earnings         | public            | private nonprofit  |  2231 |  1840 |    0     |          -0.227 |     -0.262 |     -0.188 |
+| earnings         | public            | private for-profit |  2231 |  3927 |    0     |           0.662 |      0.642 |      0.68  |
+| earnings         | private nonprofit | private for-profit |  1840 |  3927 |    0     |           0.682 |      0.662 |      0.703 |
+| median_debt      | public            | private nonprofit  |  1898 |  1738 |    0     |          -0.625 |     -0.651 |     -0.596 |
+| median_debt      | public            | private for-profit |  1898 |  4258 |    0.779 |           0.004 |     -0.026 |      0.036 |
+| median_debt      | private nonprofit | private for-profit |  1738 |  4258 |    0     |           0.505 |      0.483 |      0.533 |
+| net_price        | public            | private nonprofit  |  2048 |  1696 |    0     |          -0.703 |     -0.727 |     -0.681 |
+| net_price        | public            | private for-profit |  2048 |  4194 |    0     |          -0.682 |     -0.704 |     -0.661 |
+| net_price        | private nonprofit | private for-profit |  1696 |  4194 |    0     |           0.154 |      0.123 |      0.188 |
+

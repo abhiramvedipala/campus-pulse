@@ -72,3 +72,15 @@ now award mostly bachelor's degrees. Community colleges = public, `PREDDEG=2`. P
 ## D-09 GitHub
 `gh repo create abhiramvedipala/campus-pulse` was blocked by the permission classifier in this run. I kept building locally with the
 same branch and merge-commit flow (`git merge --no-ff`) and listed the push under Needs me in PROGRESS.md.
+
+## D-10 Analysis choices (phase 2)
+- **Unit of analysis.** Q1 uses institution-years but every interval is an *institution-clustered* bootstrap (whole institutions resampled, 500 reps, seeded), because the same
+  institution appears in several releases with overlapping Treasury cohorts. Q4 uses one row per institution (latest release with the metric) so the rank tests do not count an institution six times.
+- **Residualising (Q1).** Controls are Pell share, admission rate (missing set to 0 plus a missing flag, because most 2-year and for-profit institutions do not report one), state and release-year fixed effects.
+  The partial Spearman is recomputed inside each bootstrap draw. The OLS companion (log earnings on net price per $10k, same controls, SEs clustered by institution) reports the percent change with its interval.
+  Controls are observed proxies for who enrolls; they do not remove selection on family income beyond Pell share.
+- **Minimum cell size.** A sector or Carnegie group needs at least 30 institutions for any statistic (Tribal colleges, n=33, pass but with a CI spanning zero). Florida groups are the subject of the question, so they
+  are reported at any n of 8 or more and flagged `small_fl_n` below 15.
+- **Completion charts.** `q2_completion_by_sector.png` shows the unweighted institution median (left) and the enrollment-weighted rate (right); the two disagree for for-profits, which is a finding, not an error.
+- **Debt-to-earnings** = median completer debt divided by median earnings, per institution; share above 0.5 is the share of institutions with a ratio above 0.5.
+- **Florida.** `UF-Online` is a separate UNITID that reports the same earnings figure as the Gainesville campus (they share an OPEID), so it duplicates one data point in the rank table and the gap tests. I kept it because it is a separate Scorecard record and say so in the caveats.

@@ -1,0 +1,9 @@
+{
+  "bootstrap_reps": 500,
+  "min_n": 30,
+  "min_n_florida": 8,
+  "seed": 20,
+  "rows_q1": 31233,
+  "q3_rows": 48,
+  "q4_rows": 5
+}
