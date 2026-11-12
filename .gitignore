@@ -3,7 +3,7 @@
 data/raw/
 data/staging/
 data/warehouse*.duckdb*
-models/
+/models/
 *.joblib
 .venv/
 __pycache__/
