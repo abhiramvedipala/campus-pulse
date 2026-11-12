@@ -15,9 +15,6 @@ dbt/logs/
 dbt/dbt_packages/
 logs/
 .DS_Store
-# local build prompts, not part of the repo
-PROMPT.md
-CLAUDE.md
 reports_fixture/
 docs/charts_fixture/
 docs/findings_fixture/
