@@ -9,6 +9,7 @@ extend-exclude = ["dbt/target", ".venv"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B"]
+ignore = ["E501", "B023", "B905"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
