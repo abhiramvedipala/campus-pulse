@@ -3,7 +3,7 @@
 Higher-education outcomes analytics on free US government data: College Scorecard and IPEDS in a DuckDB warehouse modeled with dbt,
 SQL analyses with proper statistics, earnings models with SHAP, and a four-page Streamlit dashboard.
 
-*Phases 3-4 (models, dashboard) are still to come; this README is updated after each phase.*
+*Phase 4 (dashboard, brief, one-command refresh) is still to come; this README is updated after each phase.*
 
 ## Problem
 Families choose colleges with sticker prices and rankings, but the question is what a school delivers for students like theirs:
@@ -51,17 +51,20 @@ Full tables in [RESULTS.md](RESULTS.md) (generated, each number with its command
 | 1. Price vs earnings | Spearman 0.30 (0.28 to 0.32); 0.17 (0.15 to 0.19) after controls; +8.7% earnings per $10k net price (7.7% to 9.6%) | `python -m campuspulse.analyses` |
 | 2. Completion and debt | 2022 release, median completion public 40%, nonprofit 58%, for-profit 64%; enrollment-weighted 49%, 64%, 48% | `python -m campuspulse.analyses` |
 | 3. Florida | public 4-year earnings gap $3,004 (CI -$3,779 to $8,601, n=12); completion +15.9 points | `python -m campuspulse.analyses` |
-| 4. Sector differences | Kruskal-Wallis on earnings epsilon-squared 0.34 (0.32 to 0.36), n=7,998 | `python -m campuspulse.analyses` |
+| 4. What predicts earnings | grouped-CV R2(log) 0.74, MAE $5,438 (5,284 to 5,593) vs $8,503 sector-by-state baseline; 2022 holdout MAE $7,784 vs $10,665 | `python -m campuspulse.model` |
+| Sector differences | Kruskal-Wallis on earnings epsilon-squared 0.34 (0.32 to 0.36), n=7,998 | `python -m campuspulse.analyses` |
 
 ## How it works
 - **Release choice by measurement.** Only some Scorecard releases populate 10-year earnings; I counted them (DECISIONS D-02).
 - **Missing-value strings.** `NULL`, `PrivacySuppressed`, `PS`, `NA` all become NULL and suppression is counted per column.
 - **Idempotent load.** Tables rebuild in one transaction; a test compares checksums across two runs.
 - **Clustered bootstrap.** Institutions appear in several releases, so intervals resample whole institutions (seeded).
+- **Honest validation.** Institution-grouped folds and a 2022 temporal holdout against same-year baselines; a leakage test and a permuted-target test.
+- **SHAP that adds up.** SHAP additivity is asserted (native categorical splits were mis-attributed, DECISIONS D-11).
 - **Honest controls.** Admission rate is missing for most 2-year and for-profit schools; I use a missing flag instead of dropping them.
 
 ## Testing
-`pytest` (10 tests: load, download, SQL vs pandas recomputation, bootstrap reproducibility) and `dbt build` (18 data tests). `scripts/check.sh --fixture` runs both offline.
+`pytest` (17 tests: load, download, SQL vs pandas recomputation, bootstrap, leakage, fold integrity, SHAP additivity) and `dbt build` (18 data tests). `scripts/check.sh --fixture` runs both offline.
 
 ## Design decisions and trade-offs
 See [DECISIONS.md](DECISIONS.md). Top three: earnings releases are not the newest ones; Carnegie comes from IPEDS because Scorecard's
@@ -72,7 +75,7 @@ Earnings describe a cohort that entered about a decade before the release. Dolla
 
 ## Project structure
 ```
-campuspulse/  download, load, config, warehouse_stats, analyses, stats, results
+campuspulse/  download, load, config, warehouse_stats, analyses, stats, model, results
 analysis/     four SQL analyses
 reports/      CSV outputs and findings_auto.md
 
