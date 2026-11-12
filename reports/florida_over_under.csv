@@ -1,0 +1,43 @@
+unitid,institution_name,state,sector,n_releases,mean_resid_pct,actual_last,pred_last,outside_one_sd,group
+133951,Florida International University,FL,public,6,11.57,65722.0,55946.51,False,Florida public 4-year
+451671,University of South Florida-Sarasota-Manatee,FL,public,4,11.33,43500.0,35807.53,False,Florida public 4-year
+448840,University of South Florida-St Petersburg,FL,public,4,10.54,43500.0,39406.96,False,Florida public 4-year
+134495,Hillsborough College,FL,public,6,10.31,45697.0,43356.6,False,Florida public community college
+132709,Broward College,FL,public,6,5.64,45986.0,46878.93,False,Florida public community college
+133508,Florida SouthWestern State College,FL,public,6,5.57,48404.0,44781.68,False,Florida public community college
+137209,Seminole State College of Florida,FL,public,6,4.73,47074.0,45015.97,False,Florida public community college
+451680,University of South Florida-Polytechnic,FL,public,1,4.72,41700.0,39820.67,False,Florida public 4-year
+134130,University of Florida,FL,public,6,4.68,78456.0,72790.46,False,Florida public 4-year
+133669,Florida Atlantic University,FL,public,6,4.41,61062.0,55518.13,False,Florida public 4-year
+262129,New College of Florida,FL,public,2,3.36,53164.0,50366.17,False,Florida public 4-year
+133021,Chipola College,FL,public,6,3.23,42998.0,43293.24,False,Florida public community college
+136358,Palm Beach State College,FL,public,6,3.16,46814.0,46553.97,False,Florida public community college
+137759,Tallahassee State College,FL,public,6,2.71,43089.0,43380.55,False,Florida public community college
+137096,Santa Fe College,FL,public,6,2.18,46650.0,47504.25,False,Florida public community college
+137078,St Petersburg College,FL,public,6,2.13,46150.0,44214.1,False,Florida public community college
+133702,Florida State College at Jacksonville,FL,public,6,1.95,45388.0,45350.34,False,Florida public community college
+135188,Lake-Sumter State College,FL,public,6,1.71,44593.0,42597.74,False,Florida public community college
+137281,Saint Johns River State College,FL,public,6,1.14,45331.0,45415.02,False,Florida public community college
+134343,Gulf Coast State College,FL,public,6,1.12,43513.0,43232.17,False,Florida public community college
+135160,Florida Gateway College,FL,public,6,0.35,43859.0,43726.82,False,Florida public community college
+136172,University of North Florida,FL,public,6,0.29,59626.0,57715.11,False,Florida public 4-year
+138187,Valencia College,FL,public,6,-0.13,45388.0,47492.63,False,Florida public community college
+433660,Florida Gulf Coast University,FL,public,6,-0.2,59401.0,57301.46,False,Florida public 4-year
+132903,University of Central Florida,FL,public,6,-0.36,63483.0,59352.18,False,Florida public 4-year
+136400,Pasco-Hernando State College,FL,public,6,-0.38,44395.0,44379.98,False,Florida public community college
+133650,Florida Agricultural and Mechanical University,FL,public,6,-0.48,52104.0,54927.01,False,Florida public 4-year
+136145,North Florida College,FL,public,6,-0.74,40788.0,43164.36,False,Florida public community college
+137351,University of South Florida,FL,public,6,-1.27,63660.0,59700.6,False,Florida public 4-year
+136516,Polk State College,FL,public,6,-1.66,44710.0,46630.8,False,Florida public community college
+135717,Miami Dade College,FL,public,6,-2.47,45444.0,44085.03,False,Florida public community college
+132851,College of Central Florida,FL,public,6,-3.13,42070.0,45861.54,False,Florida public community college
+135391,State College of Florida-Manatee-Sarasota,FL,public,6,-3.25,45866.0,46046.79,False,Florida public community college
+138354,University of West Florida,FL,public,6,-3.95,52902.0,55840.41,False,Florida public 4-year
+134608,Indian River State College,FL,public,6,-4.85,43542.0,44620.52,False,Florida public community college
+136233,Northwest Florida State College,FL,public,6,-7.04,43741.0,45397.67,False,Florida public community college
+134097,Florida State University,FL,public,6,-8.54,68225.0,70733.46,False,Florida public 4-year
+132693,Eastern Florida State College,FL,public,6,-8.73,42223.0,45757.88,False,Florida public community college
+137315,South Florida State College,FL,public,6,-9.39,41548.0,44055.08,False,Florida public community college
+133386,Daytona State College,FL,public,6,-10.58,41756.0,46014.04,False,Florida public community college
+133960,The College of the Florida Keys,FL,public,6,-11.24,46593.0,47588.28,False,Florida public community college
+136473,Pensacola State College,FL,public,6,-12.4,41050.0,44618.32,False,Florida public community college

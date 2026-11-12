@@ -84,3 +84,19 @@ same branch and merge-commit flow (`git merge --no-ff`) and listed the push unde
 - **Completion charts.** `q2_completion_by_sector.png` shows the unweighted institution median (left) and the enrollment-weighted rate (right); the two disagree for for-profits, which is a finding, not an error.
 - **Debt-to-earnings** = median completer debt divided by median earnings, per institution; share above 0.5 is the share of institutions with a ratio above 0.5.
 - **Florida.** `UF-Online` is a separate UNITID that reports the same earnings figure as the Gainesville campus (they share an OPEID), so it duplicates one data point in the rank table and the gap tests. I kept it because it is a separate Scorecard record and say so in the caveats.
+
+## D-11 Modeling choices (phase 3) [`python -m campuspulse.model`, `reports/model_meta.json`]
+- **Model selected: gradient boosting** (`HistGradientBoostingRegressor`, fixed hyperparameters, no tuning on the scoring folds). It has the lowest institution-grouped CV MAE ($5,438 vs $6,477 for the best
+  regularized linear model) and the lowest temporal-holdout MAE. Linear models stay in the report for inference and as comparison.
+- **Leakage.** Features: net price, Pell share, admission rate, log enrollment, completion, retention, sector, Carnegie group, state, release year. Excluded: the target, `MN_EARN_WNE_P10`, `COUNT_WNE_P10`, `MD_EARN_WNE_P6/P8`
+  (earnings of the same students) and debt-to-earnings (target in the denominator). `tests/test_leakage.py` fails if any of them enters `FEATURES` or `mart_model_input`, and a permuted-target test checks that features cannot predict a shuffled target.
+- **Validation.** (a) institution-grouped 5-fold: an institution's rows never straddle train and test. Ridge/lasso/elastic-net penalties are chosen by leave-one-institution-fold-out CV *inside* each training set. (b) Temporal: train on 2011-2020, score 2022.
+  The 2022 release is an unseen year, so I encode it as 2020_21, the latest training release, whose dollars Scorecard re-bases to 2022 (assumed to match 2022_23). The same institutions appear in train and test, so (b) is a time test, not an unseen-institution test.
+- **Baselines** are the median log earnings by sector and by sector x state, *within release year*, falling back to coarser cells; fit on training rows only. Same-year baselines are the harder, fairer comparison.
+- **Dollars** = exp(log prediction), no smearing correction, because the target is itself a median. R-squared is reported on both scales; dollar R-squared is lower because errors are larger at high earnings.
+- **Missing values.** Linear models: median impute plus a missing flag per numeric feature (the flag carries real signal: e.g. missing admission rate marks open-admission schools). Boosting: native NaN handling.
+- **Categoricals in boosting are ordinal-coded and treated as numeric**, not as sklearn categorical splits. SHAP's TreeExplainer mis-attributes native categorical splits (measured additivity error 1.65 log points); the code now asserts additivity < 1e-6 and a test covers it.
+  Cost: R-squared (log) 0.742 vs 0.752 with native categoricals.
+- **OLS inference** uses HC3 robust SEs (Breusch-Pagan rejects homoskedasticity). Cluster-by-institution SEs are stored beside them and are about 2x larger for the core terms, so I treat HC3 intervals as optimistic.
+- **Release year is the top SHAP driver.** That is a dollar-base artifact (nominal dollars re-based per release), not an institutional characteristic. It is kept as a fixed effect and flagged in every explanation.
+- **Florida over/under-performers** exclude "University of Florida-Online" (same earnings record as the main campus). Residual = mean out-of-fold log residual across an institution's releases, shown as a percent. A typical residual is about 23%, so small differences are noise.

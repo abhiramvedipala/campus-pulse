@@ -1,0 +1,31 @@
+sector,feature,mean_abs_shap
+public,net_price,0.09332644353051157
+public,pct_pell,0.07269190039706297
+public,admission_rate,0.06072359416943215
+public,enrollment,0.05628834024283079
+public,completion_rate,0.02810017694316402
+public,retention_rate,0.024713563603179188
+public,sector,0.0791846421149291
+public,carnegie_group,0.03520617681503237
+public,state,0.03140926709046362
+public,release_year,0.12701332556951192
+private nonprofit,net_price,0.0691281805399978
+private nonprofit,pct_pell,0.09478852799847015
+private nonprofit,admission_rate,0.07128796843271053
+private nonprofit,enrollment,0.059837354123376846
+private nonprofit,completion_rate,0.04272991624969791
+private nonprofit,retention_rate,0.030576011344534484
+private nonprofit,sector,0.04242036469142648
+private nonprofit,carnegie_group,0.046090680643130225
+private nonprofit,state,0.03650795041765187
+private nonprofit,release_year,0.12894745132369426
+private for-profit,net_price,0.08045655342598061
+private for-profit,pct_pell,0.07856887854021125
+private for-profit,admission_rate,0.05653938898431696
+private for-profit,enrollment,0.0781892776792203
+private for-profit,completion_rate,0.037322743744282384
+private for-profit,retention_rate,0.021673701614593532
+private for-profit,sector,0.0668297470240951
+private for-profit,carnegie_group,0.04530739354504584
+private for-profit,state,0.0349526589150685
+private for-profit,release_year,0.11371927166830581

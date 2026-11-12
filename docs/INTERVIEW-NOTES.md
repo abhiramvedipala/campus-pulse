@@ -60,3 +60,30 @@ I fill with 0 plus a missing flag, which keeps all rows, and recompute the resid
 5. *What is the minimum cell rule?* 30 institutions for sector/Carnegie groups, 8 for Florida with a small-n flag.
 
 **Files to open**: `analysis/*.sql`, `campuspulse/analyses.py`, `campuspulse/stats.py`, `tests/test_analyses.py`, `reports/findings_auto.md`.
+
+## Phase 3: modeling and explanations
+
+**What it built**
+- OLS with HC3 robust SEs, ridge/lasso/elastic net with institution-grouped penalty selection, and a gradient-boosting model.
+- Two honest validations (institution-grouped 5-fold and a 2022 temporal holdout) against two same-year baselines, with institution-clustered bootstrap intervals.
+- SHAP (summary, by-sector drivers, net-price dependence), a SHAP-vs-lasso rank comparison, residual diagnostics and a Florida over/under-performer table.
+- A leakage test and a permuted-target test.
+
+**Key decisions (and "why not X?")**
+- *Why grouped folds?* An institution's rows across releases are near-duplicates; random folds would measure memorisation. Grouped CV is the "institutions the model has never seen" number.
+- *Why HistGradientBoosting, not LightGBM/XGBoost?* No extra native dependency, deterministic with a seed, and good enough; I chose by validation, not preference.
+- *Why not tune hyperparameters?* Fixed settings avoid selecting on the scoring folds; the gain from tuning would be small next to the baseline gap.
+- *Why not deflate dollars with CPI?* The prompt fixes nominal dollars; release-year fixed effects absorb the per-release re-basing.
+
+**Hardest problem**
+SHAP looked wrong: release year, which has a large linear effect, ranked last. I checked additivity (sum of SHAP + base value vs model output) and it was off by 1.65 log points, because TreeExplainer does not read sklearn's native categorical splits correctly.
+Fixing it meant treating ordinal-coded categoricals as numeric in the boosted model. I now assert additivity in the pipeline and in a test. The SHAP-lasso rank correlation moved from -0.16 to 0.75 once the explanations were correct.
+
+**Likely questions**
+1. *How good is the model?* Grouped CV: R-squared (log) 0.74, MAE $5,438 (95% CI 5,284 to 5,593) vs $8,503 for a sector-by-state median. On the 2022 release, trained on earlier ones: MAE $7,784 vs $10,665.
+2. *Why is the temporal score worse?* A new release means new earnings cohort and re-based dollars; the year is encoded as the latest training release, which is an assumption.
+3. *What does SHAP say drives earnings?* Release year (dollar base), net price, Pell share, enrollment, sector. All associations; net price carries a lot of "who enrolls".
+4. *Where do SHAP and lasso disagree?* Largest rank gap is state (4 places): the lasso spreads state across many small dummies; trees concentrate it.
+5. *Did you check leakage?* Yes: excluded earnings-derived fields, a test fails if one is added, and a permuted target scores near 0 R-squared out of fold.
+
+**Files to open**: `campuspulse/model.py`, `tests/test_leakage.py`, `reports/model_metrics.csv`, `reports/shap_vs_lasso.csv`, `docs/charts/shap_summary.png`, `DECISIONS.md` D-11.

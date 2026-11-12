@@ -1,0 +1,69 @@
+{
+  "best_model_by_grouped_cv_mae": "GradientBoosting",
+  "chosen_penalties": {
+    "Ridge": [
+      14.38449888287663,
+      14.38449888287663,
+      14.38449888287663,
+      14.38449888287663,
+      14.38449888287663
+    ],
+    "Lasso": [
+      0.00020875749542066297,
+      0.00020526113384043349,
+      0.00020683100703905192,
+      0.00021182005216742746,
+      0.00021124171060135264
+    ],
+    "ElasticNet": [
+      0.0002609468692758287,
+      0.00025657641730054184,
+      0.0002585387587988149,
+      0.00026477506520928423,
+      0.0002640521382516908
+    ]
+  },
+  "lasso_alpha_full_fit": 0.0002087908575633421,
+  "lasso_dropped": [
+    "state_DE",
+    "state_HI",
+    "state_KS",
+    "state_MT",
+    "state_ND",
+    "state_NH",
+    "state_NM",
+    "state_NV",
+    "state_RI",
+    "state_SD",
+    "state_WV",
+    "state_WY",
+    "release_year_2013"
+  ],
+  "shap_lasso_rank_spearman": 0.7454545454545454,
+  "resid_sd_log": 0.20563603659062132,
+  "temporal_year_encoded_as": "2020",
+  "bootstrap_reps": 300,
+  "n_rows": 35270,
+  "n_institutions": 7998,
+  "excluded_features": {
+    "median_earnings_p10": "the target itself",
+    "log_median_earnings_p10": "the target itself",
+    "mean_earnings_p10": "same Treasury earnings measurement as the target",
+    "earnings_cohort_size": "count behind the target's own measurement",
+    "median_earnings_p6": "earnings of the same students 4 years earlier; correlated with the target by construction",
+    "median_earnings_p8": "earnings of the same students 2 years earlier; correlated with the target by construction",
+    "debt_to_earnings": "contains the target in its denominator"
+  },
+  "features": [
+    "net_price",
+    "pct_pell",
+    "admission_rate",
+    "enrollment",
+    "completion_rate",
+    "retention_rate",
+    "sector",
+    "carnegie_group",
+    "state",
+    "release_year"
+  ]
+}

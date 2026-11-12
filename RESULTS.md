@@ -127,3 +127,88 @@ Pairwise Mann-Whitney with Holm correction and rank-biserial effect size:
 | net_price        | public            | private for-profit |  2048 |  4194 |    0     |          -0.682 |     -0.704 |     -0.661 |
 | net_price        | private nonprofit | private for-profit |  1696 |  4194 |    0     |           0.154 |      0.123 |      0.188 |
 
+## Phase 3: models
+
+Command for every table below: `python -m campuspulse.model`. Target: log median earnings 10 years after entry (nominal dollars, release-year fixed effects). Features: net_price, pct_pell, admission_rate, enrollment, completion_rate, retention_rate, sector, carnegie_group, state, release_year. Excluded as leakage: median_earnings_p10, log_median_earnings_p10, mean_earnings_p10, earnings_cohort_size, median_earnings_p6, median_earnings_p8, debt_to_earnings. Best by grouped-CV MAE: **GradientBoosting**.
+
+### grouped 5-fold by institution (n = 35,270 rows, 7,998 institutions)
+
+| model                           | R2 (log)             |   R2 (dollars) | MAE $                | MdAPE %           | MAE saving vs sector x state baseline (95% CI)   |
+|:--------------------------------|:---------------------|---------------:|:---------------------|:------------------|:-------------------------------------------------|
+| Baseline: sector median         | 0.335 (0.319, 0.352) |          0.266 | 9,194 (8,971, 9,426) | 19.3 (18.8, 19.8) | baseline                                         |
+| Baseline: sector x state median | 0.404 (0.386, 0.422) |          0.331 | 8,503 (8,300, 8,736) | 17.3 (16.9, 17.9) | baseline                                         |
+| ElasticNet                      | 0.643 (0.630, 0.656) |          0.551 | 6,477 (6,298, 6,660) | 12.3 (12.0, 12.7) | 2,026 (1903 to 2155)                             |
+| GradientBoosting                | 0.742 (0.732, 0.751) |          0.68  | 5,438 (5,284, 5,593) | 10.1 (9.9, 10.3)  | 3,065 (2933 to 3215)                             |
+| Lasso                           | 0.643 (0.630, 0.656) |          0.551 | 6,477 (6,298, 6,660) | 12.3 (12.0, 12.7) | 2,026 (1903 to 2155)                             |
+| OLS                             | 0.643 (0.631, 0.656) |          0.551 | 6,490 (6,311, 6,684) | 12.4 (12.1, 12.7) | 2,013 (1889 to 2139)                             |
+| Ridge                           | 0.644 (0.631, 0.656) |          0.551 | 6,483 (6,302, 6,674) | 12.4 (12.1, 12.7) | 2,020 (1897 to 2148)                             |
+
+### temporal holdout (train before 2022, test 2022) (n = 5,509 rows, 5,509 institutions)
+
+| model                           | R2 (log)             |   R2 (dollars) | MAE $                   | MdAPE %           | MAE saving vs sector x state baseline (95% CI)   |
+|:--------------------------------|:---------------------|---------------:|:------------------------|:------------------|:-------------------------------------------------|
+| Baseline: sector median         | 0.098 (0.054, 0.133) |          0.029 | 11,643 (11,316, 12,010) | 17.5 (16.9, 17.9) | baseline                                         |
+| Baseline: sector x state median | 0.235 (0.199, 0.271) |          0.169 | 10,665 (10,358, 10,968) | 15.8 (15.1, 16.2) | baseline                                         |
+| ElasticNet                      | 0.500 (0.474, 0.525) |          0.454 | 8,807 (8,562, 9,058)    | 13.6 (13.2, 14.0) | 1,858 (1665 to 2049)                             |
+| GradientBoosting                | 0.580 (0.557, 0.605) |          0.568 | 7,784 (7,566, 8,002)    | 12.2 (11.7, 12.6) | 2,881 (2685 to 3096)                             |
+| Lasso                           | 0.500 (0.474, 0.525) |          0.454 | 8,805 (8,561, 9,057)    | 13.6 (13.2, 14.0) | 1,859 (1667 to 2050)                             |
+| OLS                             | 0.501 (0.476, 0.525) |          0.457 | 8,779 (8,543, 9,026)    | 13.5 (13.1, 13.9) | 1,886 (1686 to 2082)                             |
+| Ridge                           | 0.501 (0.476, 0.525) |          0.456 | 8,786 (8,545, 9,038)    | 13.5 (13.2, 13.9) | 1,879 (1681 to 2073)                             |
+
+### SHAP importance (gradient boosting, all data) vs lasso importance
+
+| feature         |   mean_abs_shap |   shap_rank |   lasso_importance |   lasso_rank |   rank_gap |
+|:----------------|----------------:|------------:|-------------------:|-------------:|-----------:|
+| release_year    |           0.122 |           1 |              0.121 |            1 |          0 |
+| net_price       |           0.082 |           2 |              0.07  |            4 |          2 |
+| pct_pell        |           0.081 |           3 |              0.042 |            6 |          3 |
+| enrollment      |           0.066 |           4 |              0.084 |            2 |          2 |
+| sector          |           0.065 |           5 |              0.079 |            3 |          2 |
+| admission_rate  |           0.062 |           6 |              0.009 |            8 |          2 |
+| carnegie_group  |           0.042 |           7 |              0.034 |            7 |          0 |
+| completion_rate |           0.036 |           8 |              0.005 |            9 |          1 |
+| state           |           0.034 |           9 |              0.046 |            5 |          4 |
+| retention_rate  |           0.025 |          10 |              0.005 |           10 |          0 |
+
+SHAP-lasso rank Spearman rho = 0.75. Lasso dropped: state_DE, state_HI, state_KS, state_MT, state_ND, state_NH, state_NM, state_NV, state_RI, state_SD, state_WV, state_WY, release_year_2013.
+
+### OLS with HC3 robust standard errors (numeric terms are per 1 SD; categorical terms are vs the omitted level)
+
+| term                         |   coef |   ci_lo |   ci_hi |   se_hc3 |   se_cluster |   p_hc3 |   pct_effect_per_unit |
+|:-----------------------------|-------:|--------:|--------:|---------:|-------------:|--------:|----------------------:|
+| net_price                    |  0.091 |   0.086 |   0.095 |    0.002 |        0.004 |   0     |                 9.484 |
+| pct_pell                     | -0.048 |  -0.052 |  -0.044 |    0.002 |        0.004 |   0     |                -4.653 |
+| admission_rate               | -0.018 |  -0.02  |  -0.015 |    0.001 |        0.003 |   0     |                -1.752 |
+| enrollment                   |  0.088 |   0.083 |   0.093 |    0.002 |        0.004 |   0     |                 9.189 |
+| completion_rate              |  0.006 |   0.002 |   0.01  |    0.002 |        0.003 |   0.003 |                 0.611 |
+| retention_rate               | -0.007 |  -0.011 |  -0.004 |    0.002 |        0.002 |   0     |                -0.737 |
+| sector_private nonprofit     |  0.15  |   0.139 |   0.16  |    0.005 |        0.01  |   0     |                16.132 |
+| sector_public                |  0.182 |   0.171 |   0.194 |    0.006 |        0.011 |   0     |                19.997 |
+| carnegie_group_Baccalaureate |  0.03  |   0.019 |   0.041 |    0.005 |        0.011 |   0     |                 3.041 |
+| carnegie_group_Doctoral      |  0.088 |   0.076 |   0.101 |    0.006 |        0.013 |   0     |                 9.231 |
+| carnegie_group_Master's      |  0.04  |   0.029 |   0.05  |    0.005 |        0.011 |   0     |                 4.043 |
+| carnegie_group_Special focus |  0.161 |   0.139 |   0.183 |    0.011 |        0.023 |   0     |                17.427 |
+| carnegie_group_Tribal        | -0.289 |  -0.322 |  -0.256 |    0.017 |        0.03  |   0     |               -25.112 |
+| carnegie_group_Unclassified  | -0.022 |  -0.031 |  -0.012 |    0.005 |        0.01  |   0     |                -2.141 |
+
+Diagnostics: R2 0.649, Breusch-Pagan p = 0.0e+00 (heteroskedastic, hence robust SEs), Jarque-Bera p = 0.0e+00, residual skew 0.41, condition number 391, max VIF 3.1, max leverage 0.026.
+
+### Florida over- and under-performers (mean out-of-fold residual %, public 4-year)
+
+| institution_name                               |   n_releases |   mean_resid_pct |   actual_last |   pred_last |
+|:-----------------------------------------------|-------------:|-----------------:|--------------:|------------:|
+| Florida International University               |            6 |             11.6 |         65722 |     55946.5 |
+| University of South Florida-Sarasota-Manatee   |            4 |             11.3 |         43500 |     35807.5 |
+| University of South Florida-St Petersburg      |            4 |             10.5 |         43500 |     39407   |
+| University of South Florida-Polytechnic        |            1 |              4.7 |         41700 |     39820.7 |
+| University of Florida                          |            6 |              4.7 |         78456 |     72790.5 |
+| Florida Atlantic University                    |            6 |              4.4 |         61062 |     55518.1 |
+| New College of Florida                         |            2 |              3.4 |         53164 |     50366.2 |
+| University of North Florida                    |            6 |              0.3 |         59626 |     57715.1 |
+| Florida Gulf Coast University                  |            6 |             -0.2 |         59401 |     57301.5 |
+| University of Central Florida                  |            6 |             -0.4 |         63483 |     59352.2 |
+| Florida Agricultural and Mechanical University |            6 |             -0.5 |         52104 |     54927   |
+| University of South Florida                    |            6 |             -1.3 |         63660 |     59700.6 |
+| University of West Florida                     |            6 |             -4   |         52902 |     55840.4 |
+| Florida State University                       |            6 |             -8.5 |         68225 |     70733.5 |
+

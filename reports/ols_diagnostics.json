@@ -1,0 +1,20 @@
+{
+  "n": 35270,
+  "r2": 0.6491248976095197,
+  "adj_r2": 0.648357183842639,
+  "cov_type": "HC3",
+  "breusch_pagan_lm_p": 0.0,
+  "jarque_bera_p": 0.0,
+  "residual_skew": 0.4053711273225998,
+  "condition_number": 390.5581969002809,
+  "max_leverage": 0.02649221260217105,
+  "vif_numeric": {
+    "net_price": 2.0724515850661547,
+    "pct_pell": 1.9487273067652855,
+    "admission_rate": 1.1164823807595419,
+    "enrollment": 3.0756770914670697,
+    "completion_rate": 1.8808374921440432,
+    "retention_rate": 1.4831742475325942
+  },
+  "note": "HC3 robust SEs reported; cluster-by-institution SEs are in the se_cluster column and are larger when repeated releases correlate."
+}

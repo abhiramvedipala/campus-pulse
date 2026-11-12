@@ -152,7 +152,82 @@ def phase2(rep) -> list[str]:
     return out
 
 
-SECTIONS = [phase1, phase2]
+def phase3(rep) -> list[str]:
+    met, meta, cmp = (
+        _load(rep, "model_metrics.csv"),
+        _load(rep, "model_meta.json"),
+        _load(rep, "shap_vs_lasso.csv"),
+    )
+    if met is None:
+        return []
+    cmd = "`python -m campuspulse.model`"
+    out = [
+        "## Phase 3: models",
+        "",
+        f"Command for every table below: {cmd}. Target: log median earnings 10 years after entry (nominal dollars, release-year fixed effects). "
+        f"Features: {', '.join(meta['features'])}. Excluded as leakage: {', '.join(meta['excluded_features'])}. Best by grouped-CV MAE: **{meta['best_model_by_grouped_cv_mae']}**.",
+        "",
+    ]
+    for v in met.validation.unique():
+        t = met[met.validation == v]
+        piv = t.pivot(index="model", columns="metric", values="estimate")
+        lo, hi = t.pivot(index="model", columns="metric", values="ci_lo"), t.pivot(index="model", columns="metric", values="ci_hi")
+        tab = pd.DataFrame(
+            {
+                "R2 (log)": [f"{piv.loc[m, 'R2_log']:.3f} ({lo.loc[m, 'R2_log']:.3f}, {hi.loc[m, 'R2_log']:.3f})" for m in piv.index],
+                "R2 (dollars)": [f"{piv.loc[m, 'R2_dollars']:.3f}" for m in piv.index],
+                "MAE $": [
+                    f"{piv.loc[m, 'MAE_dollars']:,.0f} ({lo.loc[m, 'MAE_dollars']:,.0f}, {hi.loc[m, 'MAE_dollars']:,.0f})"
+                    for m in piv.index
+                ],
+                "MdAPE %": [
+                    f"{piv.loc[m, 'MdAPE_pct']:.1f} ({lo.loc[m, 'MdAPE_pct']:.1f}, {hi.loc[m, 'MdAPE_pct']:.1f})" for m in piv.index
+                ],
+            },
+            index=piv.index,
+        )
+        sav = t[t.metric == "MAE_dollars"].set_index("model")
+        tab["MAE saving vs sector x state baseline (95% CI)"] = [
+            f"{sav.loc[m, 'mae_saving_vs_sector_state']:,.0f} ({sav.loc[m, 'mae_saving_vs_sector_state_ci']})"
+            if pd.notna(sav.loc[m, "mae_saving_vs_sector_state"])
+            else "baseline"
+            for m in tab.index
+        ]
+        out += [f"### {v} (n = {int(t.n_rows.iloc[0]):,} rows, {int(t.n_institutions.iloc[0]):,} institutions)", "", tab.to_markdown(), ""]
+    out += [
+        "### SHAP importance (gradient boosting, all data) vs lasso importance",
+        "",
+        cmp.round(3).to_markdown(index=False),
+        "",
+        f"SHAP-lasso rank Spearman rho = {meta['shap_lasso_rank_spearman']:.2f}. Lasso dropped: {', '.join(meta['lasso_dropped']) or 'none'}.",
+        "",
+    ]
+    ols, diag = _load(rep, "ols_coefficients.csv"), _load(rep, "ols_diagnostics.json")
+    if ols is not None:
+        main = ols[~ols.term.str.startswith(("state_", "release_year_", "missingindicator_", "const"))]
+        out += [
+            "### OLS with HC3 robust standard errors (numeric terms are per 1 SD; categorical terms are vs the omitted level)",
+            "",
+            main.round(3).to_markdown(index=False),
+            "",
+            f"Diagnostics: R2 {diag['r2']:.3f}, Breusch-Pagan p = {diag['breusch_pagan_lm_p']:.1e} (heteroskedastic, hence robust SEs), Jarque-Bera p = {diag['jarque_bera_p']:.1e}, "
+            f"residual skew {diag['residual_skew']:.2f}, condition number {diag['condition_number']:.0f}, max VIF {max(diag['vif_numeric'].values()):.1f}, max leverage {diag['max_leverage']:.3f}.",
+            "",
+        ]
+    fl = _load(rep, "florida_over_under.csv")
+    if fl is not None:
+        out += [
+            "### Florida over- and under-performers (mean out-of-fold residual %, public 4-year)",
+            "",
+            fl[fl.group == "Florida public 4-year"][["institution_name", "n_releases", "mean_resid_pct", "actual_last", "pred_last"]]
+            .round(1)
+            .to_markdown(index=False),
+            "",
+        ]
+    return out
+
+
+SECTIONS = [phase1, phase2, phase3]
 
 
 def run(fixture: bool = False) -> None:
