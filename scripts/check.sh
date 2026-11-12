@@ -2,7 +2,7 @@
 # Lint + tests + load + dbt build + analyses/models. `--fixture` runs offline on data/fixtures/.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-PY="${PYTHON:-.venv/bin/python}"; [ -x "$PY" ] || PY=python
+PY="${PYTHON:-$PWD/.venv/bin/python}"; [ -x "$PY" ] || PY=python
 FIX=""; if [ "${1:-}" = "--fixture" ]; then FIX="--fixture"; fi
 
 "$PY" -m ruff check .
