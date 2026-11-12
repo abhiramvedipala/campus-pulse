@@ -3,8 +3,10 @@
 ## Done
 - Phase 1: ingestion, DuckDB warehouse, dbt models/tests, data dictionary, check.sh, CI (branch `phase-1-ingest-warehouse`).
 
+- Phase 2: SQL analyses, tests, charts, auto findings (branch `phase-2-sql-analyses`).
+
 ## Next
-- Phase 2: SQL analyses and statistical tests. Phase 3: models and SHAP. Phase 4: dashboard, brief, `make refresh`.
+- Phase 3: models and SHAP. Phase 4: dashboard, brief, `make refresh`.
 
 ## Needs me
 - Create the GitHub repo and push: `gh repo create abhiramvedipala/campus-pulse` was blocked by a permission prompt in the build session.
