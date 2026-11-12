@@ -3,29 +3,34 @@
 Usage: python -m campuspulse.load [--fixture]
 Idempotent: every table is dropped and rebuilt from the same inputs, parquet writes are deterministic.
 """
+
 import argparse
-import io
 import os
 import time
 import zipfile
+
 import duckdb
 import pandas as pd
+
 from . import config as C
 
 SENTINELS = ("NULL", "PrivacySuppressed", "NA")  # "NA" is how releases before 2020 write missing
-IPEDS_COLS = {"hd": C.IPEDS_HD_COLS, "sfa": C.IPEDS_SFA_COLS, "drvgr": C.IPEDS_DRVGR_COLS,
-              "drvef": C.IPEDS_DRVEF_COLS, "drvc": C.IPEDS_DRVC_COLS}
+IPEDS_COLS = {
+    "hd": C.IPEDS_HD_COLS,
+    "sfa": C.IPEDS_SFA_COLS,
+    "drvgr": C.IPEDS_DRVGR_COLS,
+    "drvef": C.IPEDS_DRVEF_COLS,
+    "drvc": C.IPEDS_DRVC_COLS,
+}
 
 
 def db_path(fixture: bool):
-    return C.Path(os.environ["CAMPUSPULSE_DB"]) if "CAMPUSPULSE_DB" in os.environ else (
-        C.FIXTURE_WAREHOUSE if fixture else C.WAREHOUSE)
+    return C.Path(os.environ["CAMPUSPULSE_DB"]) if "CAMPUSPULSE_DB" in os.environ else (C.FIXTURE_WAREHOUSE if fixture else C.WAREHOUSE)
 
 
 def _read_text(fh, cols) -> pd.DataFrame:
     """All columns as text, only the wanted ones that exist; BOM and padding stripped from headers."""
-    df = pd.read_csv(fh, dtype=str, keep_default_na=False, encoding="latin1",
-                     usecols=lambda c: c.strip().lstrip("ï»¿").lstrip("﻿") in cols)
+    df = pd.read_csv(fh, dtype=str, keep_default_na=False, encoding="latin1", usecols=lambda c: c.strip().lstrip("ï»¿").lstrip("﻿") in cols)
     df.columns = [c.strip().lstrip("ï»¿").lstrip("﻿") for c in df.columns]
     return df
 
@@ -60,10 +65,16 @@ def clean_scorecard(df: pd.DataFrame, release: str) -> tuple[pd.DataFrame, pd.Da
     rows = []
     for col in df.columns:
         s = df[col]
-        rows.append({"release": release, "column_name": col, "n_rows": len(s),
-                     "n_suppressed": int((s == "PrivacySuppressed").sum()),
-                     "n_null_literal": int(s.isin(["NULL", "NA", ""]).sum()),
-                     "n_nonnull": int((~s.isin(SENTINELS) & (s != "")).sum())})
+        rows.append(
+            {
+                "release": release,
+                "column_name": col,
+                "n_rows": len(s),
+                "n_suppressed": int((s == "PrivacySuppressed").sum()),
+                "n_null_literal": int(s.isin(["NULL", "NA", ""]).sum()),
+                "n_nonnull": int((~s.isin(SENTINELS) & (s != "")).sum()),
+            }
+        )
     out = df.mask(df.isin(SENTINELS + ("",))).astype(object)
     out = out.where(out.notna(), None)
     return out, pd.DataFrame(rows)
@@ -99,8 +110,11 @@ def run(fixture: bool = False) -> dict:
     path = db_path(fixture)
     con = duckdb.connect(str(path))
     con.execute("PRAGMA memory_limit='4GB'; PRAGMA threads=4; CREATE SCHEMA IF NOT EXISTS raw;")
-    frames = {"scorecard": pd.concat(sc, ignore_index=True), "suppression": pd.concat(supp, ignore_index=True),
-              "load_log": pd.DataFrame(log)}
+    frames = {
+        "scorecard": pd.concat(sc, ignore_index=True),
+        "suppression": pd.concat(supp, ignore_index=True),
+        "load_log": pd.DataFrame(log),
+    }
     for k, parts in ip.items():
         if parts:
             frames[f"ipeds_{k}"] = pd.concat(parts, ignore_index=True)

@@ -1,9 +1,12 @@
 """Download Scorecard bulk data, its dictionary and IPEDS files into data/raw/ (resumable, checksummed)."""
+
 import hashlib
 import json
 import re
 import sys
+
 import requests
+
 from . import config as C
 
 MANIFEST = C.RAW / "MANIFEST.json"
@@ -53,8 +56,10 @@ def run() -> dict:
     s = requests.Session()
     manifest = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {}
     html = s.get(C.SCORECARD_PAGE, timeout=60).text
-    jobs = [(scrape_raw_zip_url(html), C.RAW / "College_Scorecard_Raw_Data.zip", "scorecard_raw"),
-            (C.DICT_URL, C.RAW / "dict.xlsx", "scorecard_dictionary")]
+    jobs = [
+        (scrape_raw_zip_url(html), C.RAW / "College_Scorecard_Raw_Data.zip", "scorecard_raw"),
+        (C.DICT_URL, C.RAW / "dict.xlsx", "scorecard_dictionary"),
+    ]
     for year in sorted(set(C.IPEDS_YEARS.values())):
         for kind, stem in C.ipeds_files(year).items():
             for suffix in ("", "_Dict"):

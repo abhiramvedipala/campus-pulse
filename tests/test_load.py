@@ -1,6 +1,8 @@
 import duckdb
 import pandas as pd
-from campuspulse import load, config as C
+
+from campuspulse import config as C
+from campuspulse import load
 
 
 def snapshot(path):
