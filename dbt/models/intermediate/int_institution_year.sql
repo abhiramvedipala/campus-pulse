@@ -19,9 +19,12 @@ select
          else 'Unclassified' end as carnegie_group,
     s.adm_rate, s.sat_avg, s.ugds, s.ugds_white, s.ugds_black, s.ugds_hisp, s.ugds_asian, s.ug25abv, s.pctpell,
     s.pctfloan, s.par_ed_pct_1stgen, s.female,
-    coalesce(s.npt4_pub, s.npt4_priv) as net_price,
-    coalesce(s.npt41_pub, s.npt41_priv) as net_price_lowest_income,
-    coalesce(s.npt45_pub, s.npt45_priv) as net_price_highest_income,
+    {# Net price outside 0..100,000 is set to NULL: 52 negative values (grants exceed cost, one is -103,168) and
+       one above 100,000 in the real data. Counted in RESULTS.md. #}
+    case when coalesce(s.npt4_pub, s.npt4_priv) between 0 and 100000 then coalesce(s.npt4_pub, s.npt4_priv) end as net_price,
+    case when coalesce(s.npt41_pub, s.npt41_priv) between 0 and 100000 then coalesce(s.npt41_pub, s.npt41_priv) end as net_price_lowest_income,
+    case when coalesce(s.npt45_pub, s.npt45_priv) between 0 and 100000 then coalesce(s.npt45_pub, s.npt45_priv) end as net_price_highest_income,
+    coalesce(s.npt4_pub, s.npt4_priv) as net_price_raw,
     s.costt4_a, s.tuitionfee_in, s.tuitionfee_out, s.inexpfte, s.avgfacsal, s.pftfac,
     coalesce(s.c150_4, s.c150_l4) as completion_rate,
     coalesce(s.ret_ft4, s.ret_ftl4) as retention_rate,

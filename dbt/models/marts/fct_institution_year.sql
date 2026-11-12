@@ -5,7 +5,7 @@ select
     adm_rate as admission_rate, sat_avg, ugds as enrollment, pctpell as pct_pell, pctfloan as pct_fed_loan,
     par_ed_pct_1stgen as pct_first_gen, ugds_white as share_white, ugds_black as share_black,
     ugds_hisp as share_hispanic, ugds_asian as share_asian, ug25abv as share_age_25_plus,
-    net_price, net_price_lowest_income, net_price_highest_income,
+    net_price, net_price_lowest_income, net_price_highest_income, net_price_raw,
     costt4_a as cost_of_attendance, tuitionfee_in as tuition_in_state, tuitionfee_out as tuition_out_of_state,
     inexpfte as instruction_spend_per_fte, avgfacsal as avg_faculty_salary, pftfac as share_fulltime_faculty,
     completion_rate, retention_rate,

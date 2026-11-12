@@ -1,0 +1,569 @@
+version: 2
+models:
+- name: fct_institution_year
+  description: One row per institution (unitid) and Scorecard release year, Scorecard joined to IPEDS.
+    Dollars are nominal; earnings describe a cohort that entered about a decade before the release.
+  tests:
+  - unique_combination:
+      columns:
+      - unitid
+      - release_year
+  columns:
+  - name: unitid
+    description: IPEDS institution ID (join key).
+    meta:
+      source_field: UNITID
+    tests:
+    - not_null
+    - relationships:
+        to: ref('dim_institution')
+        field: unitid
+  - name: release_year
+    description: First calendar year of the Scorecard release (2011 = release 2011-12).
+    meta:
+      source_field: MERGED<release>_PP file name
+      caveat: Earnings describe a cohort that entered about a decade before the release year.
+    tests:
+    - not_null
+  - name: release_label
+    description: Scorecard release label such as 2022_23.
+    meta:
+      source_field: MERGED<release>_PP file name
+    tests:
+    - not_null
+    - release_row_floor:
+        floor: '{{ env_var(''CP_ROW_FLOOR'', ''5000'') }}'
+  - name: institution_name
+    description: Institution name as published in that release.
+    meta:
+      source_field: INSTNM
+  - name: state
+    description: Two-letter state or territory code.
+    meta:
+      source_field: STABBR
+  - name: sector
+    description: 'Control of the institution: public, private nonprofit or private for-profit.'
+    meta:
+      source_field: CONTROL (1/2/3)
+    tests:
+    - accepted_values:
+        values:
+        - public
+        - private nonprofit
+        - private for-profit
+  - name: institution_level
+    description: 'Predominant degree awarded: 4-year (bachelor''s), 2-year (associate), certificate, graduate,
+      other.'
+    meta:
+      source_field: PREDDEG
+  - name: carnegie_group
+    description: Carnegie 2021 basic class collapsed to 7 groups, taken from IPEDS HD (static per institution).
+    meta:
+      source_field: IPEDS HD C21BASIC
+      caveat: Scorecard CCBASIC is empty in all six releases; institutions closed before 2022 are Unclassified.
+  - name: locale_code
+    description: NCES locale code (11 city large ... 43 rural remote).
+    meta:
+      source_field: LOCALE
+  - name: is_hbcu
+    description: Historically Black college or university.
+    meta:
+      source_field: HBCU
+  - name: admission_rate
+    description: Share of applicants admitted (0 to 1).
+    meta:
+      source_field: ADM_RATE
+      caveat: Only reported by admissions-based institutions, mostly 4-year.
+    tests:
+    - accepted_range:
+        min_value: 0
+        max_value: 1
+  - name: sat_avg
+    description: Average SAT equivalent score of admitted students.
+    meta:
+      source_field: SAT_AVG
+      caveat: Mostly missing outside selective 4-year institutions.
+  - name: enrollment
+    description: Undergraduate degree-seeking enrollment.
+    meta:
+      source_field: UGDS
+  - name: pct_pell
+    description: Share of undergraduates receiving Pell grants (0 to 1), a low-income proxy.
+    meta:
+      source_field: PCTPELL
+  - name: pct_fed_loan
+    description: Share of undergraduates receiving federal loans (0 to 1).
+    meta:
+      source_field: PCTFLOAN
+  - name: pct_first_gen
+    description: Share of students whose parents did not go beyond high school.
+    meta:
+      source_field: PAR_ED_PCT_1STGEN
+      caveat: Sparse in some releases.
+  - name: share_white
+    description: Share of undergraduates who are White.
+    meta:
+      source_field: UGDS_WHITE
+  - name: share_black
+    description: Share of undergraduates who are Black.
+    meta:
+      source_field: UGDS_BLACK
+  - name: share_hispanic
+    description: Share of undergraduates who are Hispanic.
+    meta:
+      source_field: UGDS_HISP
+  - name: share_asian
+    description: Share of undergraduates who are Asian.
+    meta:
+      source_field: UGDS_ASIAN
+  - name: share_age_25_plus
+    description: Share of undergraduates aged 25 or older.
+    meta:
+      source_field: UG25ABV
+  - name: net_price
+    description: Average net price (cost minus grant aid) for Title IV students; public or private column,
+      whichever applies.
+    meta:
+      source_field: NPT4_PUB / NPT4_PRIV
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+        Program-year institutions are not covered.
+    tests:
+    - accepted_range:
+        min_value: 0
+        max_value: 100000
+  - name: net_price_lowest_income
+    description: Average net price for the lowest family income bracket.
+    meta:
+      source_field: NPT41_PUB / NPT41_PRIV
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: net_price_highest_income
+    description: Average net price for the highest family income bracket.
+    meta:
+      source_field: NPT45_PUB / NPT45_PRIV
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: net_price_raw
+    description: Net price before range cleaning; values outside 0 to 100,000 are nulled in net_price.
+    meta:
+      source_field: NPT4_PUB / NPT4_PRIV
+      caveat: Contains 52 negative values (grants exceed cost) and one implausible -103,168 in the real data.
+  - name: cost_of_attendance
+    description: Average annual cost of attendance (academic-year institutions).
+    meta:
+      source_field: COSTT4_A
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: tuition_in_state
+    description: In-state tuition and fees.
+    meta:
+      source_field: TUITIONFEE_IN
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: tuition_out_of_state
+    description: Out-of-state tuition and fees.
+    meta:
+      source_field: TUITIONFEE_OUT
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: instruction_spend_per_fte
+    description: Instructional expenditure per full-time-equivalent student.
+    meta:
+      source_field: INEXPFTE
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: avg_faculty_salary
+    description: Average monthly faculty salary.
+    meta:
+      source_field: AVGFACSAL
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: share_fulltime_faculty
+    description: Share of faculty who are full time.
+    meta:
+      source_field: PFTFAC
+  - name: completion_rate
+    description: Completion within 150% of normal time for first-time full-time students (0 to 1). 4-year
+      institutions use C150_4, others C150_L4.
+    meta:
+      source_field: C150_4 / C150_L4
+      caveat: Excludes part-time and transfer-in students; the two definitions are not identical.
+    tests:
+    - accepted_range:
+        min_value: 0
+        max_value: 1
+  - name: retention_rate
+    description: First-time full-time retention rate (0 to 1). 4-year uses RET_FT4, others RET_FTL4.
+    meta:
+      source_field: RET_FT4 / RET_FTL4
+    tests:
+    - accepted_range:
+        min_value: 0
+        max_value: 1
+  - name: median_grad_debt
+    description: Median federal debt of completers.
+    meta:
+      source_field: GRAD_DEBT_MDN
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: median_debt_all
+    description: Median federal debt of all borrowers.
+    meta:
+      source_field: DEBT_MDN
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: default_rate_3yr
+    description: Three-year cohort default rate (0 to 1).
+    meta:
+      source_field: CDR3
+  - name: median_earnings_p10
+    description: Median earnings of students working and not enrolled 10 years after entry (the modeling
+      target).
+    meta:
+      source_field: MD_EARN_WNE_P10
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+        Cohort entered about a decade before the release; suppressed for small cohorts.
+    tests:
+    - accepted_range:
+        min_value: 0
+        max_value: 300000
+  - name: mean_earnings_p10
+    description: 'Mean earnings 10 years after entry. Earnings-derived: excluded from models.'
+    meta:
+      source_field: MN_EARN_WNE_P10
+      caveat: Leakage field.
+  - name: earnings_cohort_size
+    description: 'Number of students behind the earnings figure. Earnings-derived: excluded from models.'
+    meta:
+      source_field: COUNT_WNE_P10
+      caveat: Leakage field.
+  - name: median_earnings_p6
+    description: 'Median earnings 6 years after entry. Earnings-derived: excluded from models.'
+    meta:
+      source_field: MD_EARN_WNE_P6
+      caveat: Leakage field.
+  - name: median_earnings_p8
+    description: 'Median earnings 8 years after entry. Earnings-derived: excluded from models.'
+    meta:
+      source_field: MD_EARN_WNE_P8
+      caveat: Leakage field.
+  - name: debt_to_earnings
+    description: median_grad_debt divided by median_earnings_p10.
+    meta:
+      source_field: derived
+      caveat: Ratio of two medians from different student groups, not a per-student ratio.
+  - name: ipeds_matched
+    description: True when the UNITID is found in the IPEDS HD file of the same survey year.
+    meta:
+      source_field: IPEDS HD
+    tests:
+    - ipeds_match_rate:
+        threshold: 0.85
+  - name: ipeds_pct_grant_aid
+    description: Share of full-time first-time undergraduates awarded grant aid, IPEDS SFA (0 to 100).
+    meta:
+      source_field: IPEDS SFA UAGRNTP
+      caveat: Percent scale 0-100, unlike Scorecard shares.
+  - name: ipeds_avg_grant_aid
+    description: Average grant aid per recipient, IPEDS SFA.
+    meta:
+      source_field: IPEDS SFA UAGRNTA
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: ipeds_pct_pell
+    description: Share receiving Pell grants, IPEDS SFA (0 to 100).
+    meta:
+      source_field: IPEDS SFA UPGRNTP
+  - name: ipeds_pct_fed_loan
+    description: Share receiving federal loans, IPEDS SFA (0 to 100).
+    meta:
+      source_field: IPEDS SFA UFLOANP
+  - name: ipeds_enrollment_total
+    description: Total fall enrollment, IPEDS derived file.
+    meta:
+      source_field: IPEDS DRVEF ENRTOT
+      caveat: Only the 2022 survey year has derived files.
+  - name: ipeds_fte
+    description: Full-time-equivalent enrollment, IPEDS derived file.
+    meta:
+      source_field: IPEDS DRVEF FTE
+      caveat: Only the 2022 survey year.
+  - name: has_earnings
+    description: True when median_earnings_p10 is not suppressed or missing.
+    meta:
+      source_field: derived
+  - name: is_florida_public_4yr
+    description: Florida public institution whose predominant degree is the bachelor's.
+    meta:
+      source_field: derived
+      caveat: Includes Florida state colleges that award mostly bachelor's degrees.
+  - name: is_florida_public_cc
+    description: Florida public institution whose predominant degree is the associate.
+    meta:
+      source_field: derived
+- name: dim_institution
+  description: One row per institution with attributes from its latest release.
+  columns:
+  - name: unitid
+    description: IPEDS institution ID (primary key).
+    meta:
+      source_field: UNITID
+    tests:
+    - unique
+    - not_null
+  - name: institution_name
+    description: Name in the latest release the institution appears in.
+    meta:
+      source_field: INSTNM
+  - name: state
+    description: State code in the latest release.
+    meta:
+      source_field: STABBR
+  - name: sector
+    description: Sector in the latest release.
+    meta:
+      source_field: CONTROL
+  - name: institution_level
+    description: Predominant degree level in the latest release.
+    meta:
+      source_field: PREDDEG
+  - name: carnegie_group
+    description: Carnegie 2021 group.
+    meta:
+      source_field: IPEDS HD C21BASIC
+  - name: is_hbcu
+    description: HBCU flag in the latest release.
+    meta:
+      source_field: HBCU
+  - name: first_release_year
+    description: First release year the institution appears in.
+    meta:
+      source_field: derived
+  - name: last_release_year
+    description: Last release year the institution appears in.
+    meta:
+      source_field: derived
+  - name: n_releases
+    description: Number of the six releases that include the institution.
+    meta:
+      source_field: derived
+  - name: is_florida_public_4yr
+    description: Florida public 4-year flag (latest release).
+    meta:
+      source_field: derived
+  - name: is_florida_public_cc
+    description: Florida public community-college flag (latest release).
+    meta:
+      source_field: derived
+- name: mart_sector_year
+  description: Sector by release-year summary statistics.
+  tests:
+  - unique_combination:
+      columns:
+      - sector
+      - release_year
+  columns:
+  - name: sector
+    description: Sector.
+    meta:
+      source_field: CONTROL
+  - name: release_year
+    description: Release year.
+    meta:
+      source_field: derived
+  - name: n_institutions
+    description: Institutions in the release.
+    meta:
+      source_field: derived
+  - name: n_with_earnings
+    description: Institutions with non-suppressed earnings.
+    meta:
+      source_field: MD_EARN_WNE_P10
+      caveat: 'Suppression is not random: small institutions drop out.'
+  - name: median_earnings
+    description: Median of institution median earnings (unweighted).
+    meta:
+      source_field: MD_EARN_WNE_P10
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: median_net_price
+    description: Median net price (unweighted).
+    meta:
+      source_field: NPT4_*
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: median_completion_rate
+    description: Median completion rate (unweighted).
+    meta:
+      source_field: C150_*
+  - name: enrollment_weighted_completion_rate
+    description: Completion rate weighted by undergraduate enrollment.
+    meta:
+      source_field: C150_*, UGDS
+      caveat: Enrollment is missing for some rows; they drop out of both numerator and denominator.
+  - name: median_grad_debt
+    description: Median of institution median completer debt.
+    meta:
+      source_field: GRAD_DEBT_MDN
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: median_debt_to_earnings
+    description: Median debt-to-earnings ratio.
+    meta:
+      source_field: derived
+  - name: share_debt_to_earnings_above_half
+    description: Share of institutions with debt-to-earnings above 0.5.
+    meta:
+      source_field: derived
+- name: mart_florida_publics
+  description: Florida public institutions against public peers of the same level outside Florida.
+  tests:
+  - unique_combination:
+      columns:
+      - unitid
+      - release_year
+  columns:
+  - name: unitid
+    description: Institution ID.
+    meta:
+      source_field: UNITID
+  - name: release_year
+    description: Release year.
+    meta:
+      source_field: derived
+  - name: institution_name
+    description: Name.
+    meta:
+      source_field: INSTNM
+  - name: peer_group
+    description: Florida public 4-year or Florida public community college.
+    meta:
+      source_field: derived
+  - name: median_earnings_p10
+    description: Median earnings 10 years after entry.
+    meta:
+      source_field: MD_EARN_WNE_P10
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: completion_rate
+    description: Completion rate.
+    meta:
+      source_field: C150_*
+  - name: net_price
+    description: Net price.
+    meta:
+      source_field: NPT4_*
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: median_grad_debt
+    description: Median completer debt.
+    meta:
+      source_field: GRAD_DEBT_MDN
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: debt_to_earnings
+    description: Debt-to-earnings ratio.
+    meta:
+      source_field: derived
+  - name: enrollment
+    description: Undergraduate enrollment.
+    meta:
+      source_field: UGDS
+  - name: peer_median_earnings
+    description: Median earnings across public institutions of the same level outside Florida.
+    meta:
+      source_field: derived
+  - name: peer_median_completion_rate
+    description: Peer median completion rate.
+    meta:
+      source_field: derived
+  - name: peer_median_net_price
+    description: Peer median net price.
+    meta:
+      source_field: derived
+  - name: peer_median_debt_to_earnings
+    description: Peer median debt-to-earnings.
+    meta:
+      source_field: derived
+  - name: peer_n_with_earnings
+    description: Peers with non-suppressed earnings.
+    meta:
+      source_field: derived
+  - name: earnings_gap
+    description: Own earnings minus peer median.
+    meta:
+      source_field: derived
+  - name: completion_gap
+    description: Own completion minus peer median.
+    meta:
+      source_field: derived
+  - name: net_price_gap
+    description: Own net price minus peer median.
+    meta:
+      source_field: derived
+  - name: earnings_rank_in_florida
+    description: Rank by earnings within the Florida group and year (1 = highest).
+    meta:
+      source_field: derived
+- name: mart_model_input
+  description: Institution-years with an observed earnings target and leakage-safe features.
+  tests:
+  - unique_combination:
+      columns:
+      - unitid
+      - release_year
+  columns:
+  - name: unitid
+    description: Institution ID.
+    meta:
+      source_field: UNITID
+  - name: release_year
+    description: Release year (fixed effect in models).
+    meta:
+      source_field: derived
+  - name: state
+    description: State.
+    meta:
+      source_field: STABBR
+  - name: sector
+    description: Sector.
+    meta:
+      source_field: CONTROL
+  - name: carnegie_group
+    description: Carnegie group.
+    meta:
+      source_field: IPEDS HD
+  - name: institution_level
+    description: Predominant degree level.
+    meta:
+      source_field: PREDDEG
+  - name: median_earnings_p10
+    description: Target in dollars.
+    meta:
+      source_field: MD_EARN_WNE_P10
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: log_median_earnings_p10
+    description: Natural log of the target.
+    meta:
+      source_field: derived
+  - name: net_price
+    description: 'Feature: net price.'
+    meta:
+      source_field: NPT4_*
+      caveat: Dollars are nominal as published (Scorecard re-bases each release to a different year).
+  - name: pct_pell
+    description: 'Feature: Pell share.'
+    meta:
+      source_field: PCTPELL
+  - name: admission_rate
+    description: 'Feature: admission rate.'
+    meta:
+      source_field: ADM_RATE
+  - name: enrollment
+    description: 'Feature: undergraduate enrollment.'
+    meta:
+      source_field: UGDS
+  - name: completion_rate
+    description: 'Feature: completion rate.'
+    meta:
+      source_field: C150_*
+  - name: retention_rate
+    description: 'Feature: retention rate.'
+    meta:
+      source_field: RET_*
+  - name: is_florida_public_4yr
+    description: Florida public 4-year flag (not a feature; used to report Florida results).
+    meta:
+      source_field: derived
+  - name: is_florida_public_cc
+    description: Florida public community-college flag (not a feature).
+    meta:
+      source_field: derived
+  - name: institution_name
+    description: Name (not a feature).
+    meta:
+      source_field: INSTNM
