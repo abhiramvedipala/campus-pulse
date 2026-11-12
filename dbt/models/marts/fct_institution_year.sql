@@ -1,0 +1,22 @@
+select
+    unitid, release_year, release as release_label,
+    instnm as institution_name, stabbr as state, sector, institution_level, carnegie_group,
+    locale as locale_code, coalesce(hbcu = 1, false) as is_hbcu,
+    adm_rate as admission_rate, sat_avg, ugds as enrollment, pctpell as pct_pell, pctfloan as pct_fed_loan,
+    par_ed_pct_1stgen as pct_first_gen, ugds_white as share_white, ugds_black as share_black,
+    ugds_hisp as share_hispanic, ugds_asian as share_asian, ug25abv as share_age_25_plus,
+    net_price, net_price_lowest_income, net_price_highest_income,
+    costt4_a as cost_of_attendance, tuitionfee_in as tuition_in_state, tuitionfee_out as tuition_out_of_state,
+    inexpfte as instruction_spend_per_fte, avgfacsal as avg_faculty_salary, pftfac as share_fulltime_faculty,
+    completion_rate, retention_rate,
+    grad_debt_mdn as median_grad_debt, debt_mdn as median_debt_all, cdr3 as default_rate_3yr,
+    md_earn_wne_p10 as median_earnings_p10, mn_earn_wne_p10 as mean_earnings_p10,
+    count_wne_p10 as earnings_cohort_size, md_earn_wne_p6 as median_earnings_p6, md_earn_wne_p8 as median_earnings_p8,
+    debt_to_earnings,
+    ipeds_matched, sfa_pct_grant_aid as ipeds_pct_grant_aid, sfa_avg_grant_aid as ipeds_avg_grant_aid,
+    sfa_pct_pell as ipeds_pct_pell, sfa_pct_fed_loan as ipeds_pct_fed_loan,
+    drv_enrollment_total as ipeds_enrollment_total, drv_fte as ipeds_fte,
+    md_earn_wne_p10 is not null as has_earnings,
+    (stabbr = 'FL' and control = 1 and preddeg = 3) as is_florida_public_4yr,
+    (stabbr = 'FL' and control = 1 and preddeg = 2) as is_florida_public_cc
+from {{ ref('int_institution_year') }}
