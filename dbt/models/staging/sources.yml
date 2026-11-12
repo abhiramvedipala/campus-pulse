@@ -1,0 +1,14 @@
+version: 2
+sources:
+  - name: raw
+    schema: raw
+    description: Text tables written by campuspulse.load (sentinels already converted to NULL).
+    tables:
+      - name: scorecard
+      - name: suppression
+      - name: load_log
+      - name: ipeds_hd
+      - name: ipeds_sfa
+      - name: ipeds_drvgr
+      - name: ipeds_drvef
+      - name: ipeds_drvc
