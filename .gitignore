@@ -2,8 +2,7 @@
 .env
 data/raw/
 data/staging/
-data/warehouse.duckdb
-data/warehouse.duckdb.wal
+data/warehouse*.duckdb*
 models/
 *.joblib
 .venv/
