@@ -153,10 +153,9 @@ def phase2(rep) -> list[str]:
 
 
 def phase3(rep) -> list[str]:
-    met, meta, shp, cmp = (
+    met, meta, cmp = (
         _load(rep, "model_metrics.csv"),
         _load(rep, "model_meta.json"),
-        _load(rep, "shap_importance.csv"),
         _load(rep, "shap_vs_lasso.csv"),
     )
     if met is None:

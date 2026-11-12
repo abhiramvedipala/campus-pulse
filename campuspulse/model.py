@@ -473,17 +473,14 @@ def run(fixture: bool = False) -> None:
         r = met[(met.validation.str.startswith(v)) & (met.model == mdl) & (met.metric == metric)].iloc[0]
         return r
 
-    bg, bt, base2 = (lambda v, k: m_(v, best, k)), None, "Baseline: sector x state median"
-    mae_g, r2_g, mae_t, r2_t = (
+    bg, base2 = (lambda v, k: m_(v, best, k)), "Baseline: sector x state median"
+    mae_g, r2_g, mae_t = (
         bg("grouped", "MAE_dollars"),
         bg("grouped", "R2_log"),
         bg("temporal", "MAE_dollars"),
-        bg("temporal", "R2_log"),
     )
     bmae_g, bmae_t = m_("grouped", base2, "MAE_dollars"), m_("temporal", base2, "MAE_dollars")
     top3 = ", ".join(imp.feature.head(3))
-    over = fl.head(1).iloc[0]
-    under = fl.tail(1).iloc[0]
     fl4 = fl[fl.group == "Florida public 4-year"]
     txt = [
         f"**Q4 prediction.** The best model by institution-grouped 5-fold validation is {best} (n = {len(df):,} institution-years, {meta['n_institutions']:,} institutions): "
