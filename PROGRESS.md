@@ -5,9 +5,10 @@
 
 - Phase 2: SQL analyses, tests, charts, auto findings (branch `phase-2-sql-analyses`).
 - Phase 3: models, validation, SHAP, residuals (branch `phase-3-modeling`).
+- Phase 4: dashboard, screenshots, one-page brief + PDF, `make refresh` (branch `phase-4-dashboard-refresh`).
 
 ## Next
-- Phase 4: dashboard, brief, `make refresh`.
+- Nothing: Definition of done reached except the items under Needs me.
 
 ## Needs me
 - Create the GitHub repo and push: `gh repo create abhiramvedipala/campus-pulse` was blocked by a permission prompt in the build session.
